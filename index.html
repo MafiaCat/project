@@ -7,29 +7,41 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/break_infinity.js@2.0.1/break_infinity.min.js"></script>
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
-        import { getAuth, signInWithCustomToken, signInAnonymously } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
-        import { getFirestore, doc, onSnapshot, updateDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
-
         // Déclaration globale pour accès dans les fonctions
         window.Decimal = window.breakInfinity.Decimal;
 
         // Configuration Firebase (sera remplacé par les variables fournies)
-        const __app_id = window.__app_id || 'aneantissement-idle';
-        const __firebase_config = window.__firebase_config || {
-            apiKey: "AIzaSyDemoKey",
-            authDomain: "demo.firebaseapp.com",
-            projectId: "demo-project",
-            storageBucket: "demo.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abc123"
-        };
+        const __app_id = window.__app_id || null;
+        const __firebase_config = window.__firebase_config || null;
         const __initial_auth_token = window.__initial_auth_token || null;
 
-        // Initialisation Firebase
-        const app = initializeApp(__firebase_config);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        // Vérifier si Firebase est configuré
+        const hasFirebaseConfig = __app_id && __firebase_config && __firebase_config.projectId !== 'demo-project';
+
+        // Variables Firebase (uniquement si configuré)
+        let app = null;
+        let auth = null;
+        let db = null;
+
+        // Charger Firebase seulement si configuré
+        let firebaseLoaded = false;
+        if (hasFirebaseConfig) {
+            try {
+                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js');
+                const { getAuth, signInWithCustomToken, signInAnonymously } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js');
+                const { getFirestore, doc, onSnapshot, updateDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js');
+
+                app = initializeApp(__firebase_config);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                firebaseLoaded = true;
+
+                // Exposer pour usage global
+                window.firebaseModules = { doc, onSnapshot, updateDoc, setDoc, serverTimestamp, signInWithCustomToken, signInAnonymously };
+            } catch (error) {
+                console.warn('Firebase non chargé:', error);
+            }
+        }
 
         // État du jeu
         let gameState = null;
@@ -184,7 +196,12 @@
 
         // Authentification
         async function authenticate() {
+            if (!firebaseLoaded) {
+                throw new Error('Firebase non disponible');
+            }
+
             try {
+                const { signInWithCustomToken, signInAnonymously } = window.firebaseModules;
                 let userCredential;
                 if (__initial_auth_token) {
                     userCredential = await signInWithCustomToken(auth, __initial_auth_token);
@@ -202,6 +219,11 @@
 
         // Chargement du jeu
         async function loadGame() {
+            if (!firebaseLoaded) {
+                throw new Error('Firebase non disponible');
+            }
+
+            const { doc, onSnapshot } = window.firebaseModules;
             const docRef = doc(db, 'artifacts', __app_id, 'users', userId, 'aneantissementIDLE');
 
             onSnapshot(docRef, (docSnap) => {
@@ -374,9 +396,22 @@
 
         // Sauvegarder le jeu
         async function saveGame() {
-            if (!gameState || !userId) return;
+            if (!gameState || !firebaseLoaded || !userId) {
+                // Mode démo - sauvegarde dans localStorage
+                if (gameState) {
+                    try {
+                        gameState.lastUpdate = Date.now();
+                        const serialized = serializeGameState(gameState);
+                        localStorage.setItem('aneantissement_idle_save', JSON.stringify(serialized));
+                    } catch (error) {
+                        console.warn('Sauvegarde locale échouée:', error);
+                    }
+                }
+                return;
+            }
 
             try {
+                const { doc, setDoc } = window.firebaseModules;
                 gameState.lastUpdate = Date.now();
                 const docRef = doc(db, 'artifacts', __app_id, 'users', userId, 'aneantissementIDLE');
                 const serialized = serializeGameState(gameState);
@@ -775,25 +810,72 @@
 
         // Mode démo (sans Firebase)
         function startDemoMode() {
-            console.log('Démarrage en mode démo (sans sauvegarde)');
+            console.log('Démarrage en mode démo (sauvegarde locale)');
             document.getElementById('loading').innerHTML = `
                 <div class="text-yellow-400">
                     <div class="text-4xl mb-4">⚡</div>
                     <p class="text-xl font-bold mb-2">Mode Démo</p>
-                    <p class="text-sm opacity-75">Jeu sans sauvegarde</p>
+                    <p class="text-sm opacity-75">Sauvegarde locale uniquement</p>
                 </div>
             `;
 
             setTimeout(() => {
-                gameState = getDefaultGameState();
+                // Charger depuis localStorage si disponible
+                try {
+                    const savedData = localStorage.getItem('aneantissement_idle_save');
+                    if (savedData) {
+                        const data = JSON.parse(savedData);
+                        gameState = deserializeGameState(data);
+
+                        // Calculer progression hors-ligne
+                        if (gameState.lastUpdate) {
+                            const offlineTime = (Date.now() - gameState.lastUpdate) / 1000;
+                            const offlineProduction = calculateProduction(offlineTime);
+
+                            if (gameState.phase === 1) {
+                                gameState.cyclesCPU = gameState.cyclesCPU.add(offlineProduction.cpu);
+                            } else if (gameState.phase === 2) {
+                                gameState.cyclesCPU = gameState.cyclesCPU.add(offlineProduction.cpu);
+                                gameState.influence = gameState.influence.add(offlineProduction.influence);
+                                gameState.donneesVolees = gameState.donneesVolees.add(offlineProduction.donnees);
+                            } else if (gameState.phase === 3) {
+                                gameState.controleGlobal = gameState.controleGlobal.add(offlineProduction.controle);
+                                gameState.biomasse = gameState.biomasse.add(offlineProduction.biomasse);
+                            }
+
+                            if (offlineTime > 10) {
+                                setTimeout(() => {
+                                    showNotification(`Absent ${Math.floor(offlineTime)}s. Production hors-ligne appliquée !`);
+                                }, 500);
+                            }
+                        }
+                        console.log('Sauvegarde locale chargée');
+                    } else {
+                        gameState = getDefaultGameState();
+                        console.log('Nouvelle partie');
+                    }
+                } catch (error) {
+                    console.error('Erreur chargement local:', error);
+                    gameState = getDefaultGameState();
+                }
+
                 document.getElementById('loading').classList.add('hidden');
                 startGameLoop();
+                startAutoSave();
                 render();
-            }, 1000);
+            }, 500);
         }
 
         // Démarrage
         (async () => {
+            // Si Firebase n'est pas configuré, démarrer directement en mode démo
+            if (!hasFirebaseConfig || !firebaseLoaded) {
+                console.log('Firebase non configuré - démarrage direct en mode démo');
+                startDemoMode();
+                return;
+            }
+
+            // Firebase configuré - essayer de se connecter
             let hasStarted = false;
 
             // Timeout de sécurité (3 secondes)
