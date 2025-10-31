@@ -5,7 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aneantissement IDLE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/break_infinity.js@2.0.1" onload="initGame()"></script>
+    <!-- Essayer plusieurs CDN pour break_infinity.js -->
+    <script>
+        // Fonction pour essayer de charger break_infinity depuis plusieurs sources
+        var cdnList = [
+            'https://cdn.jsdelivr.net/npm/break_infinity.js@2.0.1/dist/break_infinity.min.js',
+            'https://unpkg.com/break_infinity.js@2.0.1/dist/break_infinity.min.js',
+            'https://cdn.skypack.dev/break_infinity.js@2.0.1'
+        ];
+
+        var currentCDN = 0;
+
+        function tryLoadBreakInfinity() {
+            if (currentCDN >= cdnList.length) {
+                console.error('❌ Impossible de charger break_infinity.js depuis aucun CDN');
+                alert('ERREUR: Impossible de charger la bibliothèque break_infinity.js\n\nLe jeu ne peut pas démarrer sans connexion internet.\nRechargez la page ou vérifiez votre connexion.');
+                return;
+            }
+
+            var script = document.createElement('script');
+            script.src = cdnList[currentCDN];
+            console.log('🔄 Tentative de chargement depuis:', cdnList[currentCDN]);
+
+            script.onload = function() {
+                console.log('✅ break_infinity.js chargé depuis:', cdnList[currentCDN]);
+                initGame();
+            };
+
+            script.onerror = function() {
+                console.warn('⚠️ Échec chargement depuis:', cdnList[currentCDN]);
+                currentCDN++;
+                tryLoadBreakInfinity();
+            };
+
+            document.head.appendChild(script);
+        }
+
+        // Démarrer le chargement
+        tryLoadBreakInfinity();
+    </script>
     <script>
         // Gestionnaire d'erreur global
         window.onerror = function(msg, url, line, col, error) {
