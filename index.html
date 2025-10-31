@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aneantissement IDLE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/break_infinity.js@2.0.1/break_infinity.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/break_infinity.js@2.0.1/break_infinity.min.js" onload="initGame()"></script>
     <script>
         // Gestionnaire d'erreur global
         window.onerror = function(msg, url, line, col, error) {
@@ -17,44 +17,46 @@
             return false;
         };
 
-        console.log('🔧 Script chargé');
+        console.log('🔧 Script principal chargé');
 
-        // Attendre que break_infinity soit chargé
-        function waitForBreakInfinity() {
-            if (typeof window.breakInfinity !== 'undefined') {
-                console.log('✅ break_infinity.js chargé');
-                window.Decimal = window.breakInfinity.Decimal;
-                console.log('✅ Decimal disponible');
-                return true;
+        // Cette fonction sera appelée quand break_infinity.js est chargé
+        function initGame() {
+            console.log('🎯 Initialisation du jeu...');
+
+            // Vérifier que break_infinity est bien chargé
+            if (typeof window.breakInfinity === 'undefined') {
+                console.error('❌ break_infinity non disponible');
+                alert('ERREUR: break_infinity.js non chargé!\n\nRechargez la page.');
+                return;
             }
-            return false;
+
+            console.log('✅ break_infinity.js chargé');
+
+            // Déclaration globale
+            window.Decimal = window.breakInfinity.Decimal;
+            console.log('✅ Decimal disponible');
+
+            // Maintenant on peut démarrer le jeu
+            setupGame();
         }
 
-        // Essayer immédiatement
-        if (!waitForBreakInfinity()) {
-            console.warn('⏳ Attente de break_infinity.js...');
-            // Réessayer toutes les 100ms pendant 5 secondes max
-            var attempts = 0;
-            var checkInterval = setInterval(function() {
-                attempts++;
-                if (waitForBreakInfinity()) {
-                    clearInterval(checkInterval);
-                    console.log('✅ break_infinity.js chargé après', attempts * 100, 'ms');
-                } else if (attempts >= 50) {
-                    clearInterval(checkInterval);
-                    alert('ERREUR: break_infinity.js ne se charge pas!\n\nVérifiez votre connexion internet ou rechargez la page.');
-                    var loadingEl = document.getElementById('loading');
-                    if (loadingEl) {
-                        loadingEl.innerHTML = '<div style="color:red;padding:20px;"><h1>ERREUR</h1><p>break_infinity.js ne se charge pas</p><p>Vérifiez votre connexion internet</p></div>';
-                    }
-                }
-            }, 100);
-        }
+        // Variables globales
+        var gameState = null;
+        var saveInterval = null;
+        var gameLoopInterval = null;
 
-        // État du jeu
-        let gameState = null;
-        let saveInterval = null;
-        let gameLoopInterval = null;
+        // Configuration du jeu (appelée après chargement de Decimal)
+        function setupGame() {
+            console.log('⚙️ Configuration du jeu...');
+
+            // Démarrer le jeu quand le DOM est prêt
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startGame);
+            } else {
+                // DOM déjà prêt, démarrer immédiatement
+                startGame();
+            }
+        }
 
         // Formatage des nombres
         function formatNumber(num) {
@@ -811,13 +813,8 @@
             }
         }
 
-        // Démarrage immédiat quand le DOM est prêt
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', startGame);
-        } else {
-            // DOM déjà prêt, démarrer immédiatement
-            startGame();
-        }
+        // NOTE: Le démarrage se fait maintenant via initGame() -> setupGame() -> startGame()
+        // Cela garantit que Decimal est chargé avant d'utiliser le jeu
     </script>
 </head>
 <body class="bg-black text-green-400 font-mono min-h-screen">
@@ -828,17 +825,6 @@
             <div class="text-xl">Chargement...</div>
         </div>
     </div>
-
-    <!-- Fallback si JS ne charge pas -->
-    <script>
-        // Cacher immédiatement le chargement après 100ms max
-        setTimeout(function() {
-            var loading = document.getElementById('loading');
-            if (loading) {
-                loading.style.display = 'none';
-            }
-        }, 100);
-    </script>
 
     <!-- Notification -->
     <div id="notification" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-6 py-3 rounded-lg shadow-lg z-50 font-bold">
