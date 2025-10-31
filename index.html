@@ -721,36 +721,63 @@
             }
         });
 
-        // Démarrage immédiat
-        window.addEventListener('DOMContentLoaded', function() {
-            console.log('Démarrage du jeu...');
+        // Fonction de démarrage
+        function startGame() {
+            console.log('🎮 Démarrage du jeu...');
 
-            // Charger le jeu
-            loadGame();
+            try {
+                // Charger le jeu
+                loadGame();
 
-            // Masquer l'écran de chargement
-            document.getElementById('loading').classList.add('hidden');
+                // Masquer l'écran de chargement
+                var loadingEl = document.getElementById('loading');
+                if (loadingEl) {
+                    loadingEl.classList.add('hidden');
+                    loadingEl.style.display = 'none';
+                }
 
-            // Démarrer les boucles
-            startGameLoop();
-            startAutoSave();
+                // Démarrer les boucles
+                startGameLoop();
+                startAutoSave();
 
-            // Premier rendu
-            render();
+                // Premier rendu
+                render();
 
-            console.log('Jeu démarré !');
-        });
+                console.log('✅ Jeu démarré avec succès !');
+            } catch (error) {
+                console.error('❌ Erreur au démarrage:', error);
+                alert('Erreur au démarrage du jeu. Vérifiez la console (F12).');
+            }
+        }
+
+        // Démarrage immédiat quand le DOM est prêt
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startGame);
+        } else {
+            // DOM déjà prêt, démarrer immédiatement
+            startGame();
+        }
     </script>
 </head>
 <body class="bg-black text-green-400 font-mono min-h-screen">
     <!-- Loading -->
     <div id="loading" class="flex items-center justify-center min-h-screen">
         <div class="text-center">
-            <div class="text-4xl mb-4">⚡</div>
-            <div class="text-xl">Initialisation de l'IA...</div>
-            <div class="text-sm mt-2 opacity-50">Connexion à Firebase</div>
+            <div class="text-4xl mb-4 animate-pulse">⚡</div>
+            <div class="text-xl">Chargement...</div>
         </div>
     </div>
+
+    <!-- Fallback si JS ne charge pas -->
+    <script>
+        // Cacher immédiatement le chargement après 100ms max
+        setTimeout(function() {
+            var loading = document.getElementById('loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+        }, 100);
+    </script>
 
     <!-- Notification -->
     <div id="notification" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-6 py-3 rounded-lg shadow-lg z-50 font-bold">
