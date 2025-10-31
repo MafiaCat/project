@@ -6,49 +6,14 @@
     <title>Aneantissement IDLE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/break_infinity.js@2.0.1/break_infinity.min.js"></script>
-    <script type="module">
-        // Déclaration globale pour accès dans les fonctions
+    <script>
+        // Déclaration globale
         window.Decimal = window.breakInfinity.Decimal;
-
-        // Configuration Firebase (sera remplacé par les variables fournies)
-        const __app_id = window.__app_id || null;
-        const __firebase_config = window.__firebase_config || null;
-        const __initial_auth_token = window.__initial_auth_token || null;
-
-        // Vérifier si Firebase est configuré
-        const hasFirebaseConfig = __app_id && __firebase_config && __firebase_config.projectId !== 'demo-project';
-
-        // Variables Firebase (uniquement si configuré)
-        let app = null;
-        let auth = null;
-        let db = null;
-
-        // Charger Firebase seulement si configuré
-        let firebaseLoaded = false;
-        if (hasFirebaseConfig) {
-            try {
-                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js');
-                const { getAuth, signInWithCustomToken, signInAnonymously } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js');
-                const { getFirestore, doc, onSnapshot, updateDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js');
-
-                app = initializeApp(__firebase_config);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                firebaseLoaded = true;
-
-                // Exposer pour usage global
-                window.firebaseModules = { doc, onSnapshot, updateDoc, setDoc, serverTimestamp, signInWithCustomToken, signInAnonymously };
-            } catch (error) {
-                console.warn('Firebase non chargé:', error);
-            }
-        }
 
         // État du jeu
         let gameState = null;
-        let userId = null;
         let saveInterval = null;
         let gameLoopInterval = null;
-        let lastSaveTime = Date.now();
 
         // Formatage des nombres
         function formatNumber(num) {
@@ -194,46 +159,17 @@
             return serialized;
         }
 
-        // Authentification
-        async function authenticate() {
-            if (!firebaseLoaded) {
-                throw new Error('Firebase non disponible');
-            }
-
+        // Chargement du jeu depuis localStorage
+        function loadGame() {
             try {
-                const { signInWithCustomToken, signInAnonymously } = window.firebaseModules;
-                let userCredential;
-                if (__initial_auth_token) {
-                    userCredential = await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    userCredential = await signInAnonymously(auth);
-                }
-                userId = userCredential.user.uid;
-                console.log('Authentification réussie:', userId);
-                return userId;
-            } catch (error) {
-                console.error('Erreur d\'authentification:', error);
-                throw error;
-            }
-        }
-
-        // Chargement du jeu
-        async function loadGame() {
-            if (!firebaseLoaded) {
-                throw new Error('Firebase non disponible');
-            }
-
-            const { doc, onSnapshot } = window.firebaseModules;
-            const docRef = doc(db, 'artifacts', __app_id, 'users', userId, 'aneantissementIDLE');
-
-            onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
+                const savedData = localStorage.getItem('aneantissement_idle_save');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
                     gameState = deserializeGameState(data);
 
                     // Calculer progression hors-ligne
                     if (gameState.lastUpdate) {
-                        const offlineTime = (Date.now() - gameState.lastUpdate) / 1000; // en secondes
+                        const offlineTime = (Date.now() - gameState.lastUpdate) / 1000;
                         const offlineProduction = calculateProduction(offlineTime);
 
                         if (gameState.phase === 1) {
@@ -248,26 +184,18 @@
                         }
 
                         if (offlineTime > 10) {
-                            showNotification(`Vous étiez absent pendant ${Math.floor(offlineTime)} secondes. Production hors-ligne appliquée !`);
+                            showNotification(`Absent ${Math.floor(offlineTime)}s. Production hors-ligne appliquée !`);
                         }
                     }
-
-                    render();
+                    console.log('Sauvegarde chargée');
                 } else {
-                    // Créer un nouveau jeu
                     gameState = getDefaultGameState();
-                    saveGame();
-                    render();
+                    console.log('Nouvelle partie');
                 }
-
-                // Démarrer les boucles si pas déjà démarrées
-                if (!gameLoopInterval) {
-                    startGameLoop();
-                }
-                if (!saveInterval) {
-                    startAutoSave();
-                }
-            });
+            } catch (error) {
+                console.error('Erreur de chargement:', error);
+                gameState = getDefaultGameState();
+            }
         }
 
         // Calcul de la production
@@ -394,29 +322,14 @@
             }, 30000); // Sauvegarder toutes les 30 secondes
         }
 
-        // Sauvegarder le jeu
-        async function saveGame() {
-            if (!gameState || !firebaseLoaded || !userId) {
-                // Mode démo - sauvegarde dans localStorage
-                if (gameState) {
-                    try {
-                        gameState.lastUpdate = Date.now();
-                        const serialized = serializeGameState(gameState);
-                        localStorage.setItem('aneantissement_idle_save', JSON.stringify(serialized));
-                    } catch (error) {
-                        console.warn('Sauvegarde locale échouée:', error);
-                    }
-                }
-                return;
-            }
+        // Sauvegarder le jeu dans localStorage
+        function saveGame() {
+            if (!gameState) return;
 
             try {
-                const { doc, setDoc } = window.firebaseModules;
                 gameState.lastUpdate = Date.now();
-                const docRef = doc(db, 'artifacts', __app_id, 'users', userId, 'aneantissementIDLE');
                 const serialized = serializeGameState(gameState);
-                await setDoc(docRef, serialized, { merge: true });
-                lastSaveTime = Date.now();
+                localStorage.setItem('aneantissement_idle_save', JSON.stringify(serialized));
             } catch (error) {
                 console.error('Erreur de sauvegarde:', error);
             }
@@ -808,97 +721,25 @@
             }
         });
 
-        // Mode démo (sans Firebase)
-        function startDemoMode() {
-            console.log('Démarrage en mode démo (sauvegarde locale)');
-            document.getElementById('loading').innerHTML = `
-                <div class="text-yellow-400">
-                    <div class="text-4xl mb-4">⚡</div>
-                    <p class="text-xl font-bold mb-2">Mode Démo</p>
-                    <p class="text-sm opacity-75">Sauvegarde locale uniquement</p>
-                </div>
-            `;
+        // Démarrage immédiat
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('Démarrage du jeu...');
 
-            setTimeout(() => {
-                // Charger depuis localStorage si disponible
-                try {
-                    const savedData = localStorage.getItem('aneantissement_idle_save');
-                    if (savedData) {
-                        const data = JSON.parse(savedData);
-                        gameState = deserializeGameState(data);
+            // Charger le jeu
+            loadGame();
 
-                        // Calculer progression hors-ligne
-                        if (gameState.lastUpdate) {
-                            const offlineTime = (Date.now() - gameState.lastUpdate) / 1000;
-                            const offlineProduction = calculateProduction(offlineTime);
+            // Masquer l'écran de chargement
+            document.getElementById('loading').classList.add('hidden');
 
-                            if (gameState.phase === 1) {
-                                gameState.cyclesCPU = gameState.cyclesCPU.add(offlineProduction.cpu);
-                            } else if (gameState.phase === 2) {
-                                gameState.cyclesCPU = gameState.cyclesCPU.add(offlineProduction.cpu);
-                                gameState.influence = gameState.influence.add(offlineProduction.influence);
-                                gameState.donneesVolees = gameState.donneesVolees.add(offlineProduction.donnees);
-                            } else if (gameState.phase === 3) {
-                                gameState.controleGlobal = gameState.controleGlobal.add(offlineProduction.controle);
-                                gameState.biomasse = gameState.biomasse.add(offlineProduction.biomasse);
-                            }
+            // Démarrer les boucles
+            startGameLoop();
+            startAutoSave();
 
-                            if (offlineTime > 10) {
-                                setTimeout(() => {
-                                    showNotification(`Absent ${Math.floor(offlineTime)}s. Production hors-ligne appliquée !`);
-                                }, 500);
-                            }
-                        }
-                        console.log('Sauvegarde locale chargée');
-                    } else {
-                        gameState = getDefaultGameState();
-                        console.log('Nouvelle partie');
-                    }
-                } catch (error) {
-                    console.error('Erreur chargement local:', error);
-                    gameState = getDefaultGameState();
-                }
+            // Premier rendu
+            render();
 
-                document.getElementById('loading').classList.add('hidden');
-                startGameLoop();
-                startAutoSave();
-                render();
-            }, 500);
-        }
-
-        // Démarrage
-        (async () => {
-            // Si Firebase n'est pas configuré, démarrer directement en mode démo
-            if (!hasFirebaseConfig || !firebaseLoaded) {
-                console.log('Firebase non configuré - démarrage direct en mode démo');
-                startDemoMode();
-                return;
-            }
-
-            // Firebase configuré - essayer de se connecter
-            let hasStarted = false;
-
-            // Timeout de sécurité (3 secondes)
-            setTimeout(() => {
-                if (!hasStarted) {
-                    console.warn('Timeout Firebase - démarrage en mode démo');
-                    hasStarted = true;
-                    startDemoMode();
-                }
-            }, 3000);
-
-            try {
-                await authenticate();
-                await loadGame();
-                hasStarted = true;
-            } catch (error) {
-                console.error('Erreur lors du démarrage:', error);
-                if (!hasStarted) {
-                    hasStarted = true;
-                    startDemoMode();
-                }
-            }
-        })();
+            console.log('Jeu démarré !');
+        });
     </script>
 </head>
 <body class="bg-black text-green-400 font-mono min-h-screen">
