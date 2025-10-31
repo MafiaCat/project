@@ -5,44 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aneantissement IDLE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Essayer plusieurs CDN pour break_infinity.js -->
+    <!-- Code de break_infinity.js intégré directement -->
     <script>
-        // Fonction pour essayer de charger break_infinity depuis plusieurs sources
-        var cdnList = [
-            'https://cdn.jsdelivr.net/npm/break_infinity.js@2.0.1/dist/break_infinity.min.js',
-            'https://unpkg.com/break_infinity.js@2.0.1/dist/break_infinity.min.js',
-            'https://cdn.skypack.dev/break_infinity.js@2.0.1'
-        ];
+        // Mini-version de Decimal pour gérer les grands nombres
+        // Basé sur mantisse + exposant (notation scientifique)
+        console.log('📦 Chargement de Decimal intégré...');
 
-        var currentCDN = 0;
-
-        function tryLoadBreakInfinity() {
-            if (currentCDN >= cdnList.length) {
-                console.error('❌ Impossible de charger break_infinity.js depuis aucun CDN');
-                alert('ERREUR: Impossible de charger la bibliothèque break_infinity.js\n\nLe jeu ne peut pas démarrer sans connexion internet.\nRechargez la page ou vérifiez votre connexion.');
-                return;
+        class Decimal {
+            constructor(value) {
+                if (value instanceof Decimal) {
+                    this.mantissa = value.mantissa;
+                    this.exponent = value.exponent;
+                } else if (typeof value === 'string') {
+                    this._fromString(value);
+                } else {
+                    this._fromNumber(value || 0);
+                }
+                this._normalize();
             }
 
-            var script = document.createElement('script');
-            script.src = cdnList[currentCDN];
-            console.log('🔄 Tentative de chargement depuis:', cdnList[currentCDN]);
+            _fromNumber(n) {
+                if (n === 0) {
+                    this.mantissa = 0;
+                    this.exponent = 0;
+                } else {
+                    const abs = Math.abs(n);
+                    const exp = Math.floor(Math.log10(abs));
+                    this.mantissa = (n / Math.pow(10, exp));
+                    this.exponent = exp;
+                }
+            }
 
-            script.onload = function() {
-                console.log('✅ break_infinity.js chargé depuis:', cdnList[currentCDN]);
-                initGame();
-            };
+            _fromString(s) {
+                const num = parseFloat(s);
+                this._fromNumber(num);
+            }
 
-            script.onerror = function() {
-                console.warn('⚠️ Échec chargement depuis:', cdnList[currentCDN]);
-                currentCDN++;
-                tryLoadBreakInfinity();
-            };
+            _normalize() {
+                if (this.mantissa === 0) {
+                    this.exponent = 0;
+                    return;
+                }
 
-            document.head.appendChild(script);
+                while (Math.abs(this.mantissa) >= 10) {
+                    this.mantissa /= 10;
+                    this.exponent++;
+                }
+
+                while (Math.abs(this.mantissa) < 1 && this.mantissa !== 0) {
+                    this.mantissa *= 10;
+                    this.exponent--;
+                }
+            }
+
+            toNumber() {
+                if (this.exponent > 308) return Infinity;
+                if (this.exponent < -308) return 0;
+                return this.mantissa * Math.pow(10, this.exponent);
+            }
+
+            toString() {
+                return this.mantissa.toString() + 'e' + this.exponent.toString();
+            }
+
+            add(other) {
+                const o = new Decimal(other);
+                if (this.exponent > o.exponent + 15) return new Decimal(this);
+                if (o.exponent > this.exponent + 15) return new Decimal(o);
+
+                const diff = this.exponent - o.exponent;
+                const newMantissa = this.mantissa + o.mantissa * Math.pow(10, -diff);
+                const result = new Decimal(0);
+                result.mantissa = newMantissa;
+                result.exponent = this.exponent;
+                result._normalize();
+                return result;
+            }
+
+            sub(other) {
+                const o = new Decimal(other);
+                const neg = new Decimal(o);
+                neg.mantissa = -neg.mantissa;
+                return this.add(neg);
+            }
+
+            times(other) {
+                const o = new Decimal(other);
+                const result = new Decimal(0);
+                result.mantissa = this.mantissa * o.mantissa;
+                result.exponent = this.exponent + o.exponent;
+                result._normalize();
+                return result;
+            }
+
+            div(other) {
+                const o = new Decimal(other);
+                if (o.mantissa === 0) return new Decimal(Infinity);
+                const result = new Decimal(0);
+                result.mantissa = this.mantissa / o.mantissa;
+                result.exponent = this.exponent - o.exponent;
+                result._normalize();
+                return result;
+            }
+
+            lt(other) {
+                const o = new Decimal(other);
+                if (this.exponent < o.exponent) return true;
+                if (this.exponent > o.exponent) return false;
+                return this.mantissa < o.mantissa;
+            }
+
+            lte(other) {
+                return this.lt(other) || this.eq(other);
+            }
+
+            gt(other) {
+                return !this.lte(other);
+            }
+
+            gte(other) {
+                return !this.lt(other);
+            }
+
+            eq(other) {
+                const o = new Decimal(other);
+                return this.mantissa === o.mantissa && this.exponent === o.exponent;
+            }
+
+            log10() {
+                if (this.mantissa <= 0) return new Decimal(-Infinity);
+                return new Decimal(Math.log10(this.mantissa) + this.exponent);
+            }
+
+            floor() {
+                const n = this.toNumber();
+                return new Decimal(Math.floor(n));
+            }
+
+            toFixed(decimals) {
+                return this.toNumber().toFixed(decimals);
+            }
+
+            toExponential(decimals) {
+                return this.mantissa.toExponential(decimals) + 'e' + this.exponent;
+            }
+
+            static pow(base, exp) {
+                const b = new Decimal(base);
+                const e = new Decimal(exp);
+
+                if (e.exponent > 2) return new Decimal(Infinity);
+                const expNum = e.toNumber();
+
+                const result = new Decimal(0);
+                result.mantissa = Math.pow(b.mantissa, expNum);
+                result.exponent = b.exponent * expNum;
+                result._normalize();
+                return result;
+            }
         }
 
-        // Démarrer le chargement
-        tryLoadBreakInfinity();
+        window.breakInfinity = { Decimal: Decimal };
+        console.log('✅ Decimal intégré chargé');
+
+        // Appeler initGame() dès que le DOM est prêt
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initGame();
+            });
+        } else {
+            initGame();
+        }
     </script>
     <script>
         // Gestionnaire d'erreur global
