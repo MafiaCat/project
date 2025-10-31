@@ -773,28 +773,48 @@
             }
         });
 
+        // Mode démo (sans Firebase)
+        function startDemoMode() {
+            console.log('Démarrage en mode démo (sans sauvegarde)');
+            document.getElementById('loading').innerHTML = `
+                <div class="text-yellow-400">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <p class="text-xl font-bold mb-2">Mode Démo</p>
+                    <p class="text-sm opacity-75">Jeu sans sauvegarde</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                gameState = getDefaultGameState();
+                document.getElementById('loading').classList.add('hidden');
+                startGameLoop();
+                render();
+            }, 1000);
+        }
+
         // Démarrage
         (async () => {
+            let hasStarted = false;
+
+            // Timeout de sécurité (3 secondes)
+            setTimeout(() => {
+                if (!hasStarted) {
+                    console.warn('Timeout Firebase - démarrage en mode démo');
+                    hasStarted = true;
+                    startDemoMode();
+                }
+            }, 3000);
+
             try {
                 await authenticate();
                 await loadGame();
+                hasStarted = true;
             } catch (error) {
                 console.error('Erreur lors du démarrage:', error);
-                document.getElementById('loading').innerHTML = `
-                    <div class="text-red-500">
-                        <p class="text-xl font-bold mb-4">Erreur de chargement</p>
-                        <p class="text-sm">${error.message}</p>
-                        <p class="text-xs mt-4">Mode démo activé (sans sauvegarde)</p>
-                    </div>
-                `;
-
-                // Mode démo
-                setTimeout(() => {
-                    gameState = getDefaultGameState();
-                    document.getElementById('loading').classList.add('hidden');
-                    startGameLoop();
-                    render();
-                }, 2000);
+                if (!hasStarted) {
+                    hasStarted = true;
+                    startDemoMode();
+                }
             }
         })();
     </script>
