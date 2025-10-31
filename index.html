@@ -7,8 +7,49 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/break_infinity.js@2.0.1/break_infinity.min.js"></script>
     <script>
-        // Déclaration globale
-        window.Decimal = window.breakInfinity.Decimal;
+        // Gestionnaire d'erreur global
+        window.onerror = function(msg, url, line, col, error) {
+            console.error('❌ ERREUR GLOBALE:', msg, 'Ligne:', line);
+            var errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:20px;z-index:9999;font-family:monospace;';
+            errorDiv.innerHTML = '<b>ERREUR:</b> ' + msg + '<br>Ligne: ' + line + '<br>Appuyez sur F12 pour plus de détails';
+            document.body.appendChild(errorDiv);
+            return false;
+        };
+
+        console.log('🔧 Script chargé');
+
+        // Attendre que break_infinity soit chargé
+        function waitForBreakInfinity() {
+            if (typeof window.breakInfinity !== 'undefined') {
+                console.log('✅ break_infinity.js chargé');
+                window.Decimal = window.breakInfinity.Decimal;
+                console.log('✅ Decimal disponible');
+                return true;
+            }
+            return false;
+        }
+
+        // Essayer immédiatement
+        if (!waitForBreakInfinity()) {
+            console.warn('⏳ Attente de break_infinity.js...');
+            // Réessayer toutes les 100ms pendant 5 secondes max
+            var attempts = 0;
+            var checkInterval = setInterval(function() {
+                attempts++;
+                if (waitForBreakInfinity()) {
+                    clearInterval(checkInterval);
+                    console.log('✅ break_infinity.js chargé après', attempts * 100, 'ms');
+                } else if (attempts >= 50) {
+                    clearInterval(checkInterval);
+                    alert('ERREUR: break_infinity.js ne se charge pas!\n\nVérifiez votre connexion internet ou rechargez la page.');
+                    var loadingEl = document.getElementById('loading');
+                    if (loadingEl) {
+                        loadingEl.innerHTML = '<div style="color:red;padding:20px;"><h1>ERREUR</h1><p>break_infinity.js ne se charge pas</p><p>Vérifiez votre connexion internet</p></div>';
+                    }
+                }
+            }, 100);
+        }
 
         // État du jeu
         let gameState = null;
@@ -726,27 +767,47 @@
             console.log('🎮 Démarrage du jeu...');
 
             try {
-                // Charger le jeu
+                console.log('📂 Chargement du jeu...');
                 loadGame();
+                console.log('✅ Jeu chargé, gameState:', gameState ? 'OK' : 'NULL');
 
                 // Masquer l'écran de chargement
+                console.log('🎨 Masquage écran de chargement...');
                 var loadingEl = document.getElementById('loading');
                 if (loadingEl) {
                     loadingEl.classList.add('hidden');
                     loadingEl.style.display = 'none';
+                    console.log('✅ Écran de chargement masqué');
+                } else {
+                    console.warn('⚠️ Élément loading non trouvé');
                 }
 
                 // Démarrer les boucles
+                console.log('🔄 Démarrage boucle de jeu...');
                 startGameLoop();
+                console.log('✅ Boucle démarrée');
+
+                console.log('💾 Démarrage auto-save...');
                 startAutoSave();
+                console.log('✅ Auto-save démarré');
 
                 // Premier rendu
+                console.log('🖼️ Premier rendu...');
                 render();
+                console.log('✅ Rendu terminé');
 
-                console.log('✅ Jeu démarré avec succès !');
+                console.log('🎉 Jeu démarré avec succès !');
             } catch (error) {
                 console.error('❌ Erreur au démarrage:', error);
-                alert('Erreur au démarrage du jeu. Vérifiez la console (F12).');
+                console.error('Stack:', error.stack);
+                alert('ERREUR AU DÉMARRAGE:\n' + error.message + '\n\nVérifiez la console (F12) pour plus de détails.');
+
+                // Afficher l'erreur à l'écran
+                var loadingEl = document.getElementById('loading');
+                if (loadingEl) {
+                    loadingEl.innerHTML = '<div style="color:red;padding:20px;"><h1>ERREUR</h1><p>' + error.message + '</p><p>Appuyez sur F12 pour plus de détails</p></div>';
+                    loadingEl.style.display = 'flex';
+                }
             }
         }
 
