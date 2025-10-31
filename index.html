@@ -36,27 +36,12 @@
             window.Decimal = window.breakInfinity.Decimal;
             console.log('✅ Decimal disponible');
 
-            // Maintenant on peut démarrer le jeu
-            setupGame();
-        }
+            // === TOUT LE CODE DU JEU ICI (après chargement de Decimal) ===
 
         // Variables globales
         var gameState = null;
         var saveInterval = null;
         var gameLoopInterval = null;
-
-        // Configuration du jeu (appelée après chargement de Decimal)
-        function setupGame() {
-            console.log('⚙️ Configuration du jeu...');
-
-            // Démarrer le jeu quand le DOM est prêt
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', startGame);
-            } else {
-                // DOM déjà prêt, démarrer immédiatement
-                startGame();
-            }
-        }
 
         // Formatage des nombres
         function formatNumber(num) {
@@ -813,8 +798,22 @@
             }
         }
 
-        // NOTE: Le démarrage se fait maintenant via initGame() -> setupGame() -> startGame()
-        // Cela garantit que Decimal est chargé avant d'utiliser le jeu
+        // Démarrer le jeu quand le DOM est prêt
+        console.log('⚙️ Attente du DOM...');
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('✅ DOM prêt');
+                startGame();
+            });
+        } else {
+            console.log('✅ DOM déjà prêt');
+            startGame();
+        }
+
+        // FIN de la fonction initGame()
+        }
+
+        // NOTE: initGame() est appelé automatiquement quand break_infinity.js est chargé (voir onload dans la balise script)
     </script>
 </head>
 <body class="bg-black text-green-400 font-mono min-h-screen">
