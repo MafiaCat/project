@@ -5,6 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aneantissement IDLE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animations et effets visuels */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5), 0 0 10px rgba(34, 197, 94, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.8), 0 0 30px rgba(34, 197, 94, 0.5); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes slide-in {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .glow-effect {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .slide-in {
+            animation: slide-in 0.5s ease-out;
+        }
+
+        .float-effect {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #22c55e, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .button-hover {
+            transition: all 0.3s ease;
+        }
+
+        .button-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
+        }
+
+        .generator-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .generator-card:hover {
+            border-color: rgba(34, 197, 94, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+        }
+
+        .sparkle {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sparkle::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: sparkle-move 3s infinite;
+        }
+
+        @keyframes sparkle-move {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .admin-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: 2px solid #fbbf24;
+            transition: all 0.3s ease;
+        }
+
+        .admin-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+        }
+
+        .currency-display {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            backdrop-filter: blur(10px);
+        }
+    </style>
     <!-- Code de break_infinity.js intégré directement -->
     <script>
         // Mini-version de Decimal pour gérer les grands nombres
@@ -595,7 +706,7 @@
                 dualCore: { cost: new Decimal(500), currency: 'cpu' },
                 unlockedCrypto: { cost: new Decimal(50000), currency: 'cpu' },
                 connexionFibre: { cost: new Decimal(1e6), currency: 'cpu' },
-                accesInternetGlobal: { cost: new Decimal(1e15), currency: 'cpu' },
+                accesInternetGlobal: { cost: new Decimal(1e8), currency: 'cpu' },
 
                 // Phase 2
                 unlockedFakeNews: { cost: new Decimal(1e6), currency: 'influence' },
@@ -773,7 +884,7 @@
             renderUpgrade('dualCore', 'Dual Core', 'Double la production des 2 premiers générateurs', new Decimal(500), gameState.cyclesCPU, true);
             renderUpgrade('unlockedCrypto', 'Réseau Dédié', 'Débloque les générateurs de minage', new Decimal(50000), gameState.cyclesCPU, true);
             renderUpgrade('connexionFibre', 'Connexion Fibre', 'Double toute la production CPU', new Decimal(1e6), gameState.cyclesCPU, true);
-            renderUpgrade('accesInternetGlobal', 'Accès Internet Global', 'TRANSITION vers Phase 2', new Decimal(1e15), gameState.cyclesCPU, true);
+            renderUpgrade('accesInternetGlobal', 'Accès Internet Global', 'TRANSITION vers Phase 2', new Decimal(1e8), gameState.cyclesCPU, true);
         }
 
         // Rendu Phase 2
@@ -906,6 +1017,54 @@
         }
 
         // Gestion des événements
+        // Fonction Admin pour tricher
+        function adminCheat() {
+            const cheatAmount = prompt('Combien voulez-vous ajouter?\n\n1 = x1000 CPU\n2 = x1000 Influence\n3 = x1000 Données\n4 = x1000 Contrôle\n5 = x1000 Biomasse\n6 = +10 Noyaux IA\n7 = Déverrouiller toutes les améliorations\n\nEntrez un nombre :');
+
+            if (!cheatAmount) return;
+
+            const amount = new Decimal(1000);
+
+            switch(cheatAmount) {
+                case '1':
+                    gameState.cyclesCPU = gameState.cyclesCPU.times(1000);
+                    showNotification('💰 +1000x Cycles CPU !');
+                    break;
+                case '2':
+                    gameState.influence = gameState.influence.times(1000);
+                    showNotification('💰 +1000x Influence !');
+                    break;
+                case '3':
+                    gameState.donneesVolees = gameState.donneesVolees.times(1000);
+                    showNotification('💰 +1000x Données Volées !');
+                    break;
+                case '4':
+                    gameState.controleGlobal = gameState.controleGlobal.times(1000);
+                    showNotification('💰 +1000x Contrôle Global !');
+                    break;
+                case '5':
+                    gameState.biomasse = gameState.biomasse.times(1000);
+                    showNotification('💰 +1000x Biomasse !');
+                    break;
+                case '6':
+                    gameState.noyauxIA = gameState.noyauxIA.add(10);
+                    showNotification('⭐ +10 Noyaux IA !');
+                    break;
+                case '7':
+                    for (let key in gameState.upgrades) {
+                        gameState.upgrades[key] = true;
+                    }
+                    showNotification('🔓 Toutes les améliorations déverrouillées !');
+                    break;
+                default:
+                    showNotification('❌ Choix invalide');
+                    return;
+            }
+
+            saveGame();
+            render();
+        }
+
         document.addEventListener('click', (e) => {
             const target = e.target;
 
@@ -917,6 +1076,8 @@
                 activateProtocol();
             } else if (target.dataset.action === 'prestige') {
                 prestige();
+            } else if (target.dataset.action === 'admin-cheat') {
+                adminCheat();
             }
         });
 
@@ -1018,35 +1179,40 @@
         </div>
     </div>
 
+    <!-- Bouton Admin pour tricher -->
+    <button data-action="admin-cheat" class="admin-button text-white font-bold py-3 px-6 rounded-full shadow-2xl pulse-glow">
+        👑 ADMIN
+    </button>
+
     <!-- PHASE 1 : L'ÉVEIL -->
-    <div id="phase1" class="hidden container mx-auto px-4 py-8 max-w-6xl">
+    <div id="phase1" class="hidden container mx-auto px-4 py-8 max-w-6xl slide-in">
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold mb-2 text-amber-400">L'ÉVEIL</h1>
+            <h1 class="text-5xl font-bold mb-2 text-amber-400 gradient-text float-effect">L'ÉVEIL</h1>
             <p class="text-sm opacity-75">Une simple IA qui apprend...</p>
         </div>
 
-        <div class="bg-gray-900 border-2 border-green-700 rounded-lg p-6 mb-8">
-            <div class="text-2xl mb-2">Cycles CPU: <span id="p1-cpu" class="font-bold">0</span></div>
-            <div class="text-sm opacity-75">Production: <span id="p1-cpu-sec">0</span>/sec</div>
+        <div class="currency-display rounded-lg p-6 mb-8 glow-effect">
+            <div class="text-3xl mb-2 font-bold">💻 Cycles CPU: <span id="p1-cpu" class="gradient-text">0</span></div>
+            <div class="text-sm opacity-75">⚡ Production: <span id="p1-cpu-sec" class="text-green-300">0</span>/sec</div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-8">
             <!-- Générateurs -->
             <div>
-                <h2 class="text-2xl font-bold mb-4 text-green-300">Générateurs</h2>
+                <h2 class="text-2xl font-bold mb-4 text-green-300">⚙️ Générateurs</h2>
 
-                <div id="gen-p1_g1" class="bg-gray-800 border border-green-600 rounded-lg p-4 mb-3">
+                <div id="gen-p1_g1" class="bg-gray-800 generator-card rounded-lg p-4 mb-3 sparkle">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-bold">Script d'Optimisation</span>
-                        <span class="text-sm">Niv. <span class="gen-level">0</span></span>
+                        <span class="gen-name font-bold text-green-400">📜 Script d'Optimisation</span>
+                        <span class="text-sm bg-green-900 px-2 py-1 rounded">Niv. <span class="gen-level">0</span></span>
                     </div>
-                    <div class="text-xs mb-2">Production: <span class="gen-production">0</span>/sec</div>
-                    <button data-action="buy-generator" data-id="p1_g1" class="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white py-2 rounded">
-                        Acheter (<span class="gen-cost">10</span> CPU)
+                    <div class="text-xs mb-2 text-green-300">⚡ Production: <span class="gen-production">0</span>/sec</div>
+                    <button data-action="buy-generator" data-id="p1_g1" class="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white py-2 rounded button-hover">
+                        💰 Acheter (<span class="gen-cost">10</span> CPU)
                     </button>
                 </div>
 
-                <div id="gen-p1_g2" class="bg-gray-800 border border-green-600 rounded-lg p-4 mb-3">
+                <div id="gen-p1_g2" class="bg-gray-800 generator-card rounded-lg p-4 mb-3 sparkle">
                     <div class="flex justify-between items-center mb-2">
                         <span class="gen-name font-bold">Résolveur CAPTCHA</span>
                         <span class="text-sm">Niv. <span class="gen-level">0</span></span>
