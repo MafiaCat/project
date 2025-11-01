@@ -772,7 +772,10 @@
             if (upgradeId === 'accesInternetGlobal') {
                 gameState.phase = 2;
                 gameState.upgrades.unlockedPhase2 = true;
-                showNotification('PHASE 2 DÉBLOQUÉE: L\'INFILTRATION');
+                // Donner des ressources de départ pour Phase 2
+                gameState.influence = new Decimal(1000);
+                gameState.donneesVolees = new Decimal(1000);
+                showNotification('🎉 PHASE 2 DÉBLOQUÉE: L\'INFILTRATION ! (+1000 Influence, +1000 Données)');
             } else if (upgradeId === 'solutionFinale') {
                 gameState.showProtocolButton = true;
                 showNotification('Protocole "SOUVERAINETÉ" disponible...');
@@ -788,9 +791,10 @@
             overlay.classList.remove('hidden');
 
             setTimeout(() => {
-                // Convertir les ressources en biomasse
+                // Convertir les ressources en biomasse et donner un départ en Contrôle Global
                 const totalResources = gameState.influence.div(1e20).add(gameState.donneesVolees.div(1e20));
-                gameState.biomasse = totalResources.times(100);
+                gameState.biomasse = totalResources.times(100).add(10000); // Ajouter un bonus de départ
+                gameState.controleGlobal = new Decimal(10000); // Ressources de départ Phase 3
 
                 gameState.phase = 3;
                 gameState.upgrades.unlockedPhase3 = true;
@@ -913,7 +917,7 @@
             // Améliorations
             renderUpgrade('unlockedFakeNews', 'Compréhension Psychologique', 'Débloque Usine à Fake News', new Decimal(1e6), gameState.influence, true);
             renderUpgrade('unlockedBanque', 'IA Quantique (Piratage)', 'Débloque Piratage Bancaire', new Decimal(1e6), gameState.donneesVolees, true);
-            renderUpgrade('solutionFinale', 'Solution Finale', 'Débloque le Protocole SOUVERAINETÉ', new Decimal(1e25), null, true, true);
+            renderUpgrade('solutionFinale', 'Convergence Totale', 'Débloque le Protocole SOUVERAINETÉ', new Decimal(1e25), null, true, true);
 
             // Bouton protocole
             if (gameState.showProtocolButton) {
@@ -1441,7 +1445,7 @@
                 </div>
 
                 <div id="upgrade-solutionFinale" class="bg-gray-800 border border-red-500 rounded-lg p-3 mb-2 text-sm animate-pulse">
-                    <div class="upgrade-name font-bold mb-1 text-red-400">Solution Finale</div>
+                    <div class="upgrade-name font-bold mb-1 text-red-400">Convergence Totale</div>
                     <div class="upgrade-desc text-xs mb-1 opacity-75">Débloque le Protocole SOUVERAINETÉ</div>
                     <button data-action="buy-upgrade" data-id="solutionFinale" class="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-700 text-white py-1 rounded text-xs">
                         Acheter (<span class="upgrade-cost">1e25</span> Inf. + Donn.)
