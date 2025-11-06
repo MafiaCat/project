@@ -359,7 +359,9 @@
             <button id="menu-button" onclick="openMenu()">☰</button>
         </div>
 
-        <div id="messages">
+        <div id="messages"></div>
+
+        <div id="typing-container" style="padding: 12px 16px; background: #1c1c1e; display: none;">
             <div class="typing-indicator" id="typing">
                 <div class="typing-dot"></div>
                 <div class="typing-dot"></div>
@@ -413,10 +415,12 @@
         }
 
         function showTyping() {
+            document.getElementById('typing-container').style.display = 'block';
             document.getElementById('typing').classList.add('active');
         }
 
         function hideTyping() {
+            document.getElementById('typing-container').style.display = 'none';
             document.getElementById('typing').classList.remove('active');
         }
 
@@ -467,11 +471,22 @@
         const storyNodes = {
             start: {
                 messages: [
-                    { text: "Papa ? Maman ?", delay: 1000 },
-                    { text: "C'est moi... Léo.", delay: 2000 },
-                    { text: "Le téléphone normal marche pas. Y'a plus rien qui marche.", delay: 3500 },
-                    { text: "Tante Claire est partie chercher des choses il y a 2 heures...", delay: 5000 },
-                    { text: "Elle est pas revenue.", delay: 6500 }
+                    { text: "Papa ?", delay: 1000 },
+                    { text: "Papa... tu es là ?", delay: 2500 },
+                    { text: "C'est moi... Léo.", delay: 4000 },
+                    { text: "S'il te plaît réponds...", delay: 5500 },
+                    { text: "...", delay: 7000 },
+                    { text: "Le téléphone normal marche plus. Internet marche plus.", delay: 8500 },
+                    { text: "Y'a plus rien qui marche.", delay: 10000 },
+                    { text: "Les lumières se sont éteintes d'un coup. Tout est noir.", delay: 12000 },
+                    { text: "Même les voitures dans la rue... elles marchent plus.", delay: 14000 },
+                    { text: "...", delay: 16000 },
+                    { text: "Papa, j'ai peur.", delay: 17500 },
+                    { text: "Tante Claire est partie chercher des choses il y a 2 heures...", delay: 19500 },
+                    { text: "Elle m'a dit qu'elle revenait vite.", delay: 21500 },
+                    { text: "Mais elle est pas revenue.", delay: 23000 },
+                    { text: "J'entends des sirènes partout dehors.", delay: 25000 },
+                    { text: "Et des gens qui crient.", delay: 26500 }
                 ],
                 choices: [
                     {
@@ -501,7 +516,7 @@
                 messages: [
                     { text: "Je crois oui...", delay: 1000 },
                     { text: "J'ai mis le meuble devant la porte d'entrée.", delay: 2500 },
-                    { text: "Papa/Maman... c'est quoi ce qui se passe ?", delay: 4000 },
+                    { text: "Papa... c'est quoi ce qui se passe ?", delay: 4000 },
                     { text: "Pourquoi tout le monde devient méchant ?", delay: 5500 }
                 ],
                 choices: [
@@ -522,7 +537,7 @@
                     { text: "Attends !", delay: 2000 },
                     { text: "Y'a quelqu'un chez les voisins. J'entends des choses qui cassent.", delay: 3000 },
                     { text: "Ils sont en train de... de voler des trucs je crois.", delay: 5000 },
-                    { text: "Papa/Maman... j'ai peur.", delay: 6500 }
+                    { text: "Papa... j'ai peur.", delay: 6500 }
                 ],
                 choices: [
                     {
@@ -538,7 +553,7 @@
                     { text: "...", delay: 3000 },
                     { text: "...", delay: 6000 },
                     { text: "Ça va. Ils sont partis.", delay: 9000 },
-                    { text: "Papa/Maman... quand est-ce que tu rentres ?", delay: 11000 }
+                    { text: "Papa... quand est-ce que tu rentres ?", delay: 11000 }
                 ],
                 choices: [
                     {
@@ -613,7 +628,7 @@
                     { text: "Il reste des conserves dans le placard. Et de l'eau.", delay: 4000 },
                     { text: "Je vais tenir le plus longtemps possible.", delay: 5500 },
                     { text: "...", delay: 7000 },
-                    { text: "Papa/Maman ?", delay: 8500 },
+                    { text: "Papa ?", delay: 8500 },
                     { text: "Quelqu'un frappe à la porte.", delay: 10000 }
                 ],
                 choices: [
@@ -634,7 +649,7 @@
                     { text: "Il frappe encore.", delay: 3000 },
                     { text: '"S\'il vous plaît... c\'est M. Bernard. Votre voisin."', delay: 5000 },
                     { text: '"J\'ai besoin d\'aide..."', delay: 7000 },
-                    { text: "Papa/Maman, c'est vraiment le voisin. Je reconnais sa voix.", delay: 9000 }
+                    { text: "Papa, c'est vraiment le voisin. Je reconnais sa voix.", delay: 9000 }
                 ],
                 choices: [
                     {
@@ -675,7 +690,7 @@
                     { text: "C'est bon, il est entré. Je referme.", delay: 4000 },
                     { text: "Il a l'air très faible. Il tremble.", delay: 5500 },
                     { text: '"Merci mon petit... Merci..."', delay: 7000 },
-                    { text: 'Papa/Maman, il dit qu\'il est diabétique.', delay: 9000 },
+                    { text: 'Papa, il dit qu\'il est diabétique.', delay: 9000 },
                     { text: 'Son insuline est chez lui mais... il peut plus y retourner.', delay: 11000 },
                     { text: 'Les pilleurs ont défoncé sa porte.', delay: 13000 }
                 ],
@@ -704,7 +719,7 @@
                     { text: "...", delay: 9000 },
                     { text: "Il est parti.", delay: 11000 },
                     { text: "...", delay: 13000 },
-                    { text: "Papa/Maman... j'entends quelqu'un crier dehors.", delay: 15000 },
+                    { text: "Papa... j'entends quelqu'un crier dehors.", delay: 15000 },
                     { text: "C'est... c'est la voix de M. Bernard.", delay: 17000 },
                     { text: "Et puis plus rien.", delay: 19000 }
                 ],
@@ -739,7 +754,7 @@
                     { text: "La nuit tombe.", delay: 1000 },
                     { text: "J'ai éteint toutes les lumières.", delay: 2500 },
                     { text: "Y'a des feux dehors. Des voitures qui brûlent.", delay: 4500 },
-                    { text: "Papa/Maman... j'arrive pas à dormir.", delay: 6500 }
+                    { text: "Papa... j'arrive pas à dormir.", delay: 6500 }
                 ],
                 choices: [
                     {
@@ -756,7 +771,7 @@
 
             siege_day_2: {
                 messages: [
-                    { text: "Papa/Maman ?", delay: 1000 },
+                    { text: "Papa ?", delay: 1000 },
                     { text: "C'est le matin. Jour 2.", delay: 2500 },
                     { text: "Les conserves commencent à diminuer.", delay: 4000 },
                     { text: "Si ça dure longtemps... je vais devoir sortir chercher à manger.", delay: 6000 }
@@ -823,7 +838,7 @@
                     { text: "Je prends la grande avenue.", delay: 1000 },
                     { text: "...", delay: 2500 },
                     { text: "Oh non...", delay: 4000 },
-                    { text: "Papa/Maman, c'est... c'est le chaos total.", delay: 5500 },
+                    { text: "Papa, c'est... c'est le chaos total.", delay: 5500 },
                     { text: "Y'a des gens qui pillent les magasins.", delay: 7500 },
                     { text: "Des voitures en feu.", delay: 9000 },
                     { text: "Je vois des silhouettes qui courent.", delay: 10500 }
@@ -870,7 +885,7 @@
                     { text: "Mon vélo est dans le garage.", delay: 2500 },
                     { text: "En pédalant fort, je peux faire 15-20 km par jour.", delay: 4500 },
                     { text: "J'arrive sur l'autoroute...", delay: 6500 },
-                    { text: "Papa/Maman, c'est incroyable.", delay: 8500 },
+                    { text: "Papa, c'est incroyable.", delay: 8500 },
                     { text: "Y'a des MILLIERS de voitures abandonnées.", delay: 10500 },
                     { text: "C'est comme dans les films de zombies.", delay: 12500 }
                 ],
@@ -911,7 +926,7 @@
             ending_placeholder: {
                 messages: [
                     { text: "...", delay: 1000 },
-                    { text: "Papa/Maman ?", delay: 2500 },
+                    { text: "Papa ?", delay: 2500 },
                     { text: "Je crois que je vais y arriver.", delay: 4000 },
                     { text: "Merci d'être là.", delay: 5500 },
                     { text: "[À SUIVRE...]", delay: 7000 }
