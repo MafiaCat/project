@@ -340,7 +340,7 @@
         <div class="title">📡 TRANSMISSION</div>
         <div class="subtitle">
             Une catastrophe mondiale a coupé toutes les communications.<br>
-            Votre fils Léo, 11 ans, est seul en France.<br>
+            Votre fille Sarah, 11 ans, est seule en France.<br>
             Vous êtes bloqué à l'étranger.<br><br>
             Votre téléphone satellite s'allume...
         </div>
@@ -349,9 +349,9 @@
 
     <div id="game-container">
         <div id="header">
-            <div id="avatar">👦</div>
+            <div id="avatar">👧</div>
             <div id="contact-info">
-                <div id="contact-name">Léo</div>
+                <div id="contact-name">Sarah</div>
                 <div id="contact-status">
                     <span class="status-indicator"></span>Satellite connecté
                 </div>
@@ -359,13 +359,13 @@
             <button id="menu-button" onclick="openMenu()">☰</button>
         </div>
 
-        <div id="messages"></div>
-
-        <div id="typing-container" style="padding: 12px 16px; background: #1c1c1e; display: none;">
-            <div class="typing-indicator" id="typing">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
+        <div id="messages">
+            <div class="message received" id="typing-message" style="display: none;">
+                <div class="typing-indicator" id="typing">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
             </div>
         </div>
 
@@ -415,12 +415,16 @@
         }
 
         function showTyping() {
-            document.getElementById('typing-container').style.display = 'block';
+            const typingMsg = document.getElementById('typing-message');
+            typingMsg.style.display = 'flex';
             document.getElementById('typing').classList.add('active');
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         function hideTyping() {
-            document.getElementById('typing-container').style.display = 'none';
+            const typingMsg = document.getElementById('typing-message');
+            typingMsg.style.display = 'none';
             document.getElementById('typing').classList.remove('active');
         }
 
@@ -473,7 +477,7 @@
                 messages: [
                     { text: "Papa ?", delay: 1000 },
                     { text: "Papa... tu es là ?", delay: 2500 },
-                    { text: "C'est moi... Léo.", delay: 4000 },
+                    { text: "C'est moi... Sarah.", delay: 4000 },
                     { text: "S'il te plaît réponds...", delay: 5500 },
                     { text: "...", delay: 7000 },
                     { text: "Le téléphone normal marche plus. Internet marche plus.", delay: 8500 },
@@ -490,7 +494,7 @@
                 ],
                 choices: [
                     {
-                        text: "Léo, écoute-moi bien. Où es-tu exactement ?",
+                        text: "Sarah, écoute-moi bien. Où es-tu exactement ?",
                         next: 'situation'
                     }
                 ]
@@ -571,7 +575,7 @@
                 ],
                 choices: [
                     {
-                        text: "Léo, écoute-moi. Tous les avions sont bloqués. Je ne peux pas.",
+                        text: "Sarah, écoute-moi. Tous les avions sont bloqués. Je ne peux pas.",
                         next: 'acceptance'
                     },
                     {
