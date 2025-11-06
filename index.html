@@ -3,294 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aneantissement IDLE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Transmission</title>
     <style>
         * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background: #0a0a0f;
-            background-image:
-                radial-gradient(at 0% 0%, rgba(88, 28, 135, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(239, 68, 68, 0.15) 0px, transparent 50%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* GLASSMORPHISM CARDS */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #000;
+            color: #fff;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            transition: left 0.6s;
+        #game-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1c1c1e;
         }
 
-        .glass-card:hover::before {
-            left: 100%;
+        #header {
+            background: #2c2c2e;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #38383a;
         }
 
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        /* BUTTONS MODERNES */
-        .modern-btn {
-            position: relative;
-            padding: 14px 28px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .modern-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
+        #avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .modern-btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .modern-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .modern-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* GRADIENT TEXT */
-        .gradient-text {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradient-shift 3s ease infinite;
-            background-size: 200% 200%;
-        }
-
-        @keyframes gradient-shift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* CURRENCY DISPLAY */
-        .currency-display {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 24px;
-            padding: 32px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .currency-display::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-            animation: pulse-soft 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse-soft {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        /* DOMINATION INDICATOR */
-        .domination-indicator {
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(31, 41, 55, 0.6) 100%);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px;
-            padding: 40px;
-            margin-bottom: 32px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .domination-globe {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 24px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 72px;
-            position: relative;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow:
-                inset 0 0 40px rgba(0, 0, 0, 0.4),
-                0 10px 40px rgba(0, 0, 0, 0.5);
+            font-size: 20px;
         }
 
-        .domination-globe.active {
-            animation: pulse-globe 2.5s ease-in-out infinite;
+        #contact-info {
+            flex: 1;
         }
 
-        @keyframes pulse-globe {
-            0%, 100% { transform: scale(1); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 10px 40px rgba(0, 0, 0, 0.5); }
-            50% { transform: scale(1.08); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2), 0 15px 60px rgba(0, 0, 0, 0.7); }
+        #contact-name {
+            font-size: 16px;
+            font-weight: 600;
         }
 
-        .domination-progress-bar {
-            width: 100%;
-            height: 12px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        #contact-status {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-top: 2px;
         }
 
-        .domination-progress-fill {
-            height: 100%;
-            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.6s;
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34c759;
+            margin-right: 4px;
+            animation: pulse 2s infinite;
         }
 
-        .domination-progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: shimmer 2.5s infinite;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 200%; }
-        }
-
-        .domination-stage {
-            font-weight: 700;
-            text-align: center;
-            padding: 16px 24px;
-            border-radius: 16px;
-            margin-top: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 15px;
-            letter-spacing: 0.5px;
-        }
-
-        .continents-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
             gap: 12px;
-            margin-top: 24px;
         }
 
-        .continent-icon {
-            text-align: center;
-            padding: 12px;
-            border-radius: 16px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 28px;
+        .message {
+            display: flex;
+            animation: slideIn 0.3s ease-out;
         }
 
-        .continent-icon.conquered {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(185, 28, 28, 0.3));
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
-            transform: scale(1.05);
-        }
-
-        /* GENERATOR CARDS */
-        .generator-card {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            padding: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-
-        .generator-card:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(139, 92, 246, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 48px rgba(139, 92, 246, 0.15);
-        }
-
-        /* ADMIN BUTTON */
-        .admin-button {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 1000;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border: none;
-            padding: 16px 24px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .admin-button:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 16px 48px rgba(245, 158, 11, 0.6);
-        }
-
-        /* ANIMATIONS */
-        @keyframes slide-in {
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -298,1918 +103,926 @@
             }
         }
 
-        .slide-in {
-            animation: slide-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        .message.received {
+            justify-content: flex-start;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
+        .message.sent {
+            justify-content: flex-end;
         }
 
-        .float-effect {
-            animation: float 4s ease-in-out infinite;
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            line-height: 1.4;
         }
 
-        /* NOTIFICATION */
-        #notification {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 9999;
-            padding: 18px 28px;
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 16px;
-            color: white;
+        .message.received .message-bubble {
+            background: #2c2c2e;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.sent .message-bubble {
+            background: #0a84ff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #8e8e93;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.received .message-time {
+            text-align: left;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: #2c2c2e;
+            border-radius: 20px;
+            width: 60px;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #8e8e93;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        #choices {
+            padding: 12px 16px;
+            background: #2c2c2e;
+            border-top: 1px solid #38383a;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 40vh;
+            overflow-y: auto;
+        }
+
+        #choices.active {
+            display: flex;
+        }
+
+        .choice-button {
+            background: #3a3a3c;
+            border: 1px solid #48484a;
+            color: #fff;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .choice-button:hover {
+            background: #48484a;
+            transform: scale(1.02);
+        }
+
+        .choice-button:active {
+            transform: scale(0.98);
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            z-index: 1000;
+        }
+
+        #start-screen.hidden {
+            display: none;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #8e8e93;
+            text-align: center;
+            margin-bottom: 48px;
+            line-height: 1.6;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #fff;
+            padding: 16px 48px;
+            border-radius: 30px;
+            font-size: 18px;
             font-weight: 600;
-            font-size: 14px;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-            animation: slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar {
-            width: 10px;
+        .start-button:hover {
+            transform: scale(1.05);
         }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
+        .start-button:active {
+            transform: scale(0.95);
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
+        #menu-button {
+            background: none;
+            border: none;
+            color: #0a84ff;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 8px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
         }
 
-        /* RESPONSIVE TEXT */
-        h1 { font-weight: 800; letter-spacing: -1px; }
-        h2 { font-weight: 700; letter-spacing: -0.5px; }
+        .modal.active {
+            display: flex;
+        }
 
-        .text-glow {
-            text-shadow: 0 0 30px currentColor;
+        .modal-content {
+            background: #2c2c2e;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .modal-button {
+            background: #3a3a3c;
+            border: 1px solid #48484a;
+            color: #fff;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+
+        .modal-button:hover {
+            background: #48484a;
+        }
+
+        .modal-button.danger {
+            color: #ff453a;
         }
     </style>
-    <!-- Code de break_infinity.js intégré directement -->
+</head>
+<body>
+    <div id="start-screen">
+        <div class="title">📡 TRANSMISSION</div>
+        <div class="subtitle">
+            Une catastrophe mondiale a coupé toutes les communications.<br>
+            Votre fils Léo, 11 ans, est seul en France.<br>
+            Vous êtes bloqué à l'étranger.<br><br>
+            Votre téléphone satellite s'allume...
+        </div>
+        <button class="start-button" onclick="startGame()">COMMENCER</button>
+    </div>
+
+    <div id="game-container">
+        <div id="header">
+            <div id="avatar">👦</div>
+            <div id="contact-info">
+                <div id="contact-name">Léo</div>
+                <div id="contact-status">
+                    <span class="status-indicator"></span>Satellite connecté
+                </div>
+            </div>
+            <button id="menu-button" onclick="openMenu()">☰</button>
+        </div>
+
+        <div id="messages">
+            <div class="typing-indicator" id="typing">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div id="choices"></div>
+    </div>
+
+    <div id="menu-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Menu</div>
+            <button class="modal-button" onclick="saveGame()">💾 Sauvegarder</button>
+            <button class="modal-button" onclick="loadGame()">📂 Charger</button>
+            <button class="modal-button danger" onclick="resetGame()">🔄 Recommencer</button>
+            <button class="modal-button" onclick="closeMenu()">Annuler</button>
+        </div>
+    </div>
+
     <script>
-        // Mini-version de Decimal pour gérer les grands nombres
-        // Basé sur mantisse + exposant (notation scientifique)
-        console.log('📦 Chargement de Decimal intégré...');
-
-        class Decimal {
-            constructor(value) {
-                if (value instanceof Decimal) {
-                    this.mantissa = value.mantissa;
-                    this.exponent = value.exponent;
-                } else if (typeof value === 'string') {
-                    this._fromString(value);
-                } else {
-                    this._fromNumber(value || 0);
-                }
-                this._normalize();
-            }
-
-            _fromNumber(n) {
-                if (n === 0) {
-                    this.mantissa = 0;
-                    this.exponent = 0;
-                } else {
-                    const abs = Math.abs(n);
-                    const exp = Math.floor(Math.log10(abs));
-                    this.mantissa = (n / Math.pow(10, exp));
-                    this.exponent = exp;
-                }
-            }
-
-            _fromString(s) {
-                const num = parseFloat(s);
-                this._fromNumber(num);
-            }
-
-            _normalize() {
-                if (this.mantissa === 0) {
-                    this.exponent = 0;
-                    return;
-                }
-
-                while (Math.abs(this.mantissa) >= 10) {
-                    this.mantissa /= 10;
-                    this.exponent++;
-                }
-
-                while (Math.abs(this.mantissa) < 1 && this.mantissa !== 0) {
-                    this.mantissa *= 10;
-                    this.exponent--;
-                }
-            }
-
-            toNumber() {
-                if (this.exponent > 308) return Infinity;
-                if (this.exponent < -308) return 0;
-                return this.mantissa * Math.pow(10, this.exponent);
-            }
-
-            toString() {
-                return this.mantissa.toString() + 'e' + this.exponent.toString();
-            }
-
-            add(other) {
-                const o = new Decimal(other);
-                if (this.exponent > o.exponent + 15) return new Decimal(this);
-                if (o.exponent > this.exponent + 15) return new Decimal(o);
-
-                const diff = this.exponent - o.exponent;
-                const newMantissa = this.mantissa + o.mantissa * Math.pow(10, -diff);
-                const result = new Decimal(0);
-                result.mantissa = newMantissa;
-                result.exponent = this.exponent;
-                result._normalize();
-                return result;
-            }
-
-            sub(other) {
-                const o = new Decimal(other);
-                const neg = new Decimal(o);
-                neg.mantissa = -neg.mantissa;
-                return this.add(neg);
-            }
-
-            times(other) {
-                const o = new Decimal(other);
-                const result = new Decimal(0);
-                result.mantissa = this.mantissa * o.mantissa;
-                result.exponent = this.exponent + o.exponent;
-                result._normalize();
-                return result;
-            }
-
-            div(other) {
-                const o = new Decimal(other);
-                if (o.mantissa === 0) return new Decimal(Infinity);
-                const result = new Decimal(0);
-                result.mantissa = this.mantissa / o.mantissa;
-                result.exponent = this.exponent - o.exponent;
-                result._normalize();
-                return result;
-            }
-
-            lt(other) {
-                const o = new Decimal(other);
-                if (this.exponent < o.exponent) return true;
-                if (this.exponent > o.exponent) return false;
-                return this.mantissa < o.mantissa;
-            }
-
-            lte(other) {
-                return this.lt(other) || this.eq(other);
-            }
-
-            gt(other) {
-                return !this.lte(other);
-            }
-
-            gte(other) {
-                return !this.lt(other);
-            }
-
-            eq(other) {
-                const o = new Decimal(other);
-                return this.mantissa === o.mantissa && this.exponent === o.exponent;
-            }
-
-            log10() {
-                if (this.mantissa <= 0) return new Decimal(-Infinity);
-                return new Decimal(Math.log10(this.mantissa) + this.exponent);
-            }
-
-            floor() {
-                const n = this.toNumber();
-                return new Decimal(Math.floor(n));
-            }
-
-            toFixed(decimals) {
-                return this.toNumber().toFixed(decimals);
-            }
-
-            toExponential(decimals) {
-                return this.mantissa.toExponential(decimals) + 'e' + this.exponent;
-            }
-
-            static pow(base, exp) {
-                const b = new Decimal(base);
-                const e = new Decimal(exp);
-
-                if (e.exponent > 2) return new Decimal(Infinity);
-                const expNum = e.toNumber();
-
-                const result = new Decimal(0);
-                result.mantissa = Math.pow(b.mantissa, expNum);
-                result.exponent = b.exponent * expNum;
-                result._normalize();
-                return result;
-            }
-        }
-
-        window.breakInfinity = { Decimal: Decimal };
-        console.log('✅ Decimal intégré chargé');
-
-        // Appeler initGame() dès que le DOM est prêt
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                initGame();
-            });
-        } else {
-            initGame();
-        }
-    </script>
-    <script>
-        // Gestionnaire d'erreur global
-        window.onerror = function(msg, url, line, col, error) {
-            console.error('❌ ERREUR GLOBALE:', msg, 'Ligne:', line);
-            var errorDiv = document.createElement('div');
-            errorDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:20px;z-index:9999;font-family:monospace;';
-            errorDiv.innerHTML = '<b>ERREUR:</b> ' + msg + '<br>Ligne: ' + line + '<br>Appuyez sur F12 pour plus de détails';
-            document.body.appendChild(errorDiv);
-            return false;
+        // État du jeu
+        let gameState = {
+            currentNode: 'start',
+            history: [],
+            day: 1,
+            playerName: 'Parent',
+            branch: null, // 'siege', 'ville', 'exode'
+            flags: {} // Flags pour conditions spéciales
         };
 
-        console.log('🔧 Script principal chargé');
+        // Système de messages
+        function addMessage(text, type = 'received', delay = 0) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const messagesDiv = document.getElementById('messages');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${type}`;
 
-        // Cette fonction sera appelée quand break_infinity.js est chargé
-        function initGame() {
-            console.log('🎯 Initialisation du jeu...');
+                    const bubble = document.createElement('div');
+                    bubble.className = 'message-bubble';
+                    bubble.innerHTML = text;
 
-            // Vérifier que break_infinity est bien chargé
-            if (typeof window.breakInfinity === 'undefined') {
-                console.error('❌ break_infinity non disponible');
-                alert('ERREUR: break_infinity.js non chargé!\n\nRechargez la page.');
+                    messageDiv.appendChild(bubble);
+                    messagesDiv.appendChild(messageDiv);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                    resolve();
+                }, delay);
+            });
+        }
+
+        function showTyping() {
+            document.getElementById('typing').classList.add('active');
+        }
+
+        function hideTyping() {
+            document.getElementById('typing').classList.remove('active');
+        }
+
+        function showChoices(choices) {
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+
+            choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.className = 'choice-button';
+                button.textContent = choice.text;
+                button.onclick = () => selectChoice(choice);
+                choicesDiv.appendChild(button);
+            });
+
+            choicesDiv.classList.add('active');
+        }
+
+        function hideChoices() {
+            document.getElementById('choices').classList.remove('active');
+        }
+
+        async function selectChoice(choice) {
+            hideChoices();
+
+            // Ajouter le choix comme message envoyé
+            await addMessage(choice.text, 'sent');
+
+            // Enregistrer dans l'historique
+            gameState.history.push({
+                node: gameState.currentNode,
+                choice: choice.text
+            });
+
+            // Exécuter l'action
+            if (choice.action) {
+                choice.action();
+            }
+
+            // Aller au prochain nœud
+            if (choice.next) {
+                gameState.currentNode = choice.next;
+                await playNode(choice.next);
+            }
+        }
+
+        // Arbre narratif
+        const storyNodes = {
+            start: {
+                messages: [
+                    { text: "Papa ? Maman ?", delay: 1000 },
+                    { text: "C'est moi... Léo.", delay: 2000 },
+                    { text: "Le téléphone normal marche pas. Y'a plus rien qui marche.", delay: 3500 },
+                    { text: "Tante Claire est partie chercher des choses il y a 2 heures...", delay: 5000 },
+                    { text: "Elle est pas revenue.", delay: 6500 }
+                ],
+                choices: [
+                    {
+                        text: "Léo, écoute-moi bien. Où es-tu exactement ?",
+                        next: 'situation'
+                    }
+                ]
+            },
+
+            situation: {
+                messages: [
+                    { text: "Je... je suis chez Tante Claire. Dans sa maison.", delay: 1000 },
+                    { text: "J'ai fermé toutes les portes comme tu m'as appris.", delay: 2500 },
+                    { text: "Mais...", delay: 3500 },
+                    { text: "Y'a des bruits dehors.", delay: 4500 },
+                    { text: "Des gens qui crient. Et... et des vitres qui cassent.", delay: 6000 }
+                ],
+                choices: [
+                    {
+                        text: "Reste calme. Tu es en sécurité à l'intérieur ?",
+                        next: 'secure_check'
+                    }
+                ]
+            },
+
+            secure_check: {
+                messages: [
+                    { text: "Je crois oui...", delay: 1000 },
+                    { text: "J'ai mis le meuble devant la porte d'entrée.", delay: 2500 },
+                    { text: "Papa/Maman... c'est quoi ce qui se passe ?", delay: 4000 },
+                    { text: "Pourquoi tout le monde devient méchant ?", delay: 5500 }
+                ],
+                choices: [
+                    {
+                        text: "Il y a eu une panne générale. Les gens ont peur.",
+                        next: 'explain_1'
+                    },
+                    {
+                        text: "Je ne sais pas encore. Mais je vais te protéger.",
+                        next: 'explain_1'
+                    }
+                ]
+            },
+
+            explain_1: {
+                messages: [
+                    { text: "...", delay: 1000 },
+                    { text: "Attends !", delay: 2000 },
+                    { text: "Y'a quelqu'un chez les voisins. J'entends des choses qui cassent.", delay: 3000 },
+                    { text: "Ils sont en train de... de voler des trucs je crois.", delay: 5000 },
+                    { text: "Papa/Maman... j'ai peur.", delay: 6500 }
+                ],
+                choices: [
+                    {
+                        text: "Cache-toi. Ne fais AUCUN bruit. Où peux-tu te cacher ?",
+                        next: 'hide_now'
+                    }
+                ]
+            },
+
+            hide_now: {
+                messages: [
+                    { text: "Je... je vais dans le placard de la chambre.", delay: 1000 },
+                    { text: "...", delay: 3000 },
+                    { text: "...", delay: 6000 },
+                    { text: "Ça va. Ils sont partis.", delay: 9000 },
+                    { text: "Papa/Maman... quand est-ce que tu rentres ?", delay: 11000 }
+                ],
+                choices: [
+                    {
+                        text: "Je... on ne peut pas rentrer pour l'instant.",
+                        next: 'hard_truth'
+                    }
+                ]
+            },
+
+            hard_truth: {
+                messages: [
+                    { text: "Comment ça ?", delay: 1000 },
+                    { text: "Mais... mais je suis tout seul !", delay: 2500 },
+                    { text: "Tu dois rentrer ! S'il te plaît !", delay: 4000 }
+                ],
+                choices: [
+                    {
+                        text: "Léo, écoute-moi. Tous les avions sont bloqués. Je ne peux pas.",
+                        next: 'acceptance'
+                    },
+                    {
+                        text: "Je ferais TOUT pour être là. Mais c'est impossible maintenant.",
+                        next: 'acceptance'
+                    }
+                ]
+            },
+
+            acceptance: {
+                messages: [
+                    { text: "...", delay: 1000 },
+                    { text: "Mais... mais je fais quoi alors ?", delay: 3000 },
+                    { text: "Je peux pas rester tout seul ici...", delay: 5000 }
+                ],
+                choices: [
+                    {
+                        text: "Tu n'es pas seul. Je suis là, par téléphone. On va s'en sortir.",
+                        next: 'strategy_choice'
+                    }
+                ]
+            },
+
+            strategy_choice: {
+                messages: [
+                    { text: "D'accord...", delay: 1000 },
+                    { text: "Qu'est-ce que je dois faire ?", delay: 2500 },
+                    { text: "Dis-moi quoi faire et je le ferai.", delay: 4000 }
+                ],
+                choices: [
+                    {
+                        text: "🏠 Reste dans la maison. Barricade-toi et attends que ça se calme.",
+                        next: 'branch_siege',
+                        action: () => { gameState.branch = 'siege'; }
+                    },
+                    {
+                        text: "🔍 Va chercher Tante Claire. Elle a besoin de toi.",
+                        next: 'branch_ville',
+                        action: () => { gameState.branch = 'ville'; }
+                    },
+                    {
+                        text: "🏔️ Rejoins notre maison de campagne. Tu te souviens du chemin ?",
+                        next: 'branch_exode',
+                        action: () => { gameState.branch = 'exode'; }
+                    }
+                ]
+            },
+
+            // BRANCHE 1: LE SIÈGE
+            branch_siege: {
+                messages: [
+                    { text: "Rester ici... d'accord.", delay: 1000 },
+                    { text: "Je vais vérifier les fenêtres.", delay: 2500 },
+                    { text: "Il reste des conserves dans le placard. Et de l'eau.", delay: 4000 },
+                    { text: "Je vais tenir le plus longtemps possible.", delay: 5500 },
+                    { text: "...", delay: 7000 },
+                    { text: "Papa/Maman ?", delay: 8500 },
+                    { text: "Quelqu'un frappe à la porte.", delay: 10000 }
+                ],
+                choices: [
+                    {
+                        text: "Ne réponds pas. Reste silencieux.",
+                        next: 'siege_knock_ignore'
+                    },
+                    {
+                        text: "Demande qui c'est, mais n'ouvre PAS.",
+                        next: 'siege_knock_ask'
+                    }
+                ]
+            },
+
+            siege_knock_ignore: {
+                messages: [
+                    { text: "...", delay: 1000 },
+                    { text: "Il frappe encore.", delay: 3000 },
+                    { text: '"S\'il vous plaît... c\'est M. Bernard. Votre voisin."', delay: 5000 },
+                    { text: '"J\'ai besoin d\'aide..."', delay: 7000 },
+                    { text: "Papa/Maman, c'est vraiment le voisin. Je reconnais sa voix.", delay: 9000 }
+                ],
+                choices: [
+                    {
+                        text: "Ouvre-lui. Mais sois prudent.",
+                        next: 'siege_bernard_open',
+                        action: () => { gameState.flags.bernardInside = true; }
+                    },
+                    {
+                        text: "Non. C'est trop dangereux. Ne bouge pas.",
+                        next: 'siege_bernard_ignore'
+                    }
+                ]
+            },
+
+            siege_knock_ask: {
+                messages: [
+                    { text: '"Qui... qui est là ?"', delay: 1000 },
+                    { text: '"C\'est M. Bernard, ton voisin. S\'il te plaît, ouvre..."', delay: 2500 },
+                    { text: 'Il a l\'air vraiment mal en point.', delay: 4500 }
+                ],
+                choices: [
+                    {
+                        text: "Ouvre-lui.",
+                        next: 'siege_bernard_open',
+                        action: () => { gameState.flags.bernardInside = true; }
+                    },
+                    {
+                        text: "Dis-lui que tu ne peux pas. C'est trop risqué.",
+                        next: 'siege_bernard_refuse'
+                    }
+                ]
+            },
+
+            siege_bernard_open: {
+                messages: [
+                    { text: "Je... j'ouvre.", delay: 1000 },
+                    { text: "...", delay: 2500 },
+                    { text: "C'est bon, il est entré. Je referme.", delay: 4000 },
+                    { text: "Il a l'air très faible. Il tremble.", delay: 5500 },
+                    { text: '"Merci mon petit... Merci..."', delay: 7000 },
+                    { text: 'Papa/Maman, il dit qu\'il est diabétique.', delay: 9000 },
+                    { text: 'Son insuline est chez lui mais... il peut plus y retourner.', delay: 11000 },
+                    { text: 'Les pilleurs ont défoncé sa porte.', delay: 13000 }
+                ],
+                choices: [
+                    {
+                        text: "Il va falloir aller chercher son insuline. C'est vital.",
+                        next: 'siege_insulin_mission'
+                    },
+                    {
+                        text: "Qu'il se repose. On verra demain si ça se calme.",
+                        next: 'siege_insulin_wait'
+                    },
+                    {
+                        text: "Installe-le confortablement. Rationne l'eau et la nourriture.",
+                        next: 'siege_bernard_settle'
+                    }
+                ]
+            },
+
+            siege_bernard_ignore: {
+                messages: [
+                    { text: "D'accord... je bouge pas.", delay: 1000 },
+                    { text: "...", delay: 3000 },
+                    { text: "Il arrête pas de frapper...", delay: 5000 },
+                    { text: '"S\'il vous plaît... j\'ai besoin de mon insuline..."', delay: 7000 },
+                    { text: "...", delay: 9000 },
+                    { text: "Il est parti.", delay: 11000 },
+                    { text: "...", delay: 13000 },
+                    { text: "Papa/Maman... j'entends quelqu'un crier dehors.", delay: 15000 },
+                    { text: "C'est... c'est la voix de M. Bernard.", delay: 17000 },
+                    { text: "Et puis plus rien.", delay: 19000 }
+                ],
+                choices: [
+                    {
+                        text: "Tu as fait ce qu'il fallait. Ta sécurité d'abord.",
+                        next: 'siege_night_1',
+                        action: () => { gameState.flags.bernardDead = true; gameState.flags.guilt = true; }
+                    }
+                ]
+            },
+
+            siege_bernard_refuse: {
+                messages: [
+                    { text: '"Monsieur Bernard... je peux pas ouvrir. Désolé."', delay: 1000 },
+                    { text: '"Je comprends, petit... Reste en sécurité."', delay: 3000 },
+                    { text: "Il s'en va.", delay: 5000 },
+                    { text: "...", delay: 7000 },
+                    { text: "J'espère qu'il va s'en sortir.", delay: 9000 }
+                ],
+                choices: [
+                    {
+                        text: "Tu as fait le bon choix. Maintenant, prépare-toi pour la nuit.",
+                        next: 'siege_night_1',
+                        action: () => { gameState.flags.bernardRefused = true; }
+                    }
+                ]
+            },
+
+            siege_night_1: {
+                messages: [
+                    { text: "La nuit tombe.", delay: 1000 },
+                    { text: "J'ai éteint toutes les lumières.", delay: 2500 },
+                    { text: "Y'a des feux dehors. Des voitures qui brûlent.", delay: 4500 },
+                    { text: "Papa/Maman... j'arrive pas à dormir.", delay: 6500 }
+                ],
+                choices: [
+                    {
+                        text: "Je reste en ligne avec toi. Tu n'es pas seul.",
+                        next: 'siege_day_2'
+                    },
+                    {
+                        text: "Économise la batterie. On se parle demain matin.",
+                        next: 'siege_day_2',
+                        action: () => { gameState.flags.batterySaved = true; }
+                    }
+                ]
+            },
+
+            siege_day_2: {
+                messages: [
+                    { text: "Papa/Maman ?", delay: 1000 },
+                    { text: "C'est le matin. Jour 2.", delay: 2500 },
+                    { text: "Les conserves commencent à diminuer.", delay: 4000 },
+                    { text: "Si ça dure longtemps... je vais devoir sortir chercher à manger.", delay: 6000 }
+                ],
+                choices: [
+                    {
+                        text: "Rationne tout ce que tu as. 2 repas par jour maximum.",
+                        next: 'siege_ration'
+                    },
+                    {
+                        text: "On va planifier une sortie. Repère les maisons les plus sûres.",
+                        next: 'siege_recon'
+                    }
+                ]
+            },
+
+            // BRANCHE 2: LA VILLE
+            branch_ville: {
+                messages: [
+                    { text: "Chercher Tante Claire... oui, tu as raison.", delay: 1000 },
+                    { text: "Je peux pas la laisser toute seule dehors.", delay: 2500 },
+                    { text: "Je prends mon sac à dos. Et le téléphone.", delay: 4000 },
+                    { text: "Elle allait au supermarché normalement.", delay: 5500 },
+                    { text: "C'est à 20 minutes à pied.", delay: 7000 },
+                    { text: "J'y vais.", delay: 8500 }
+                ],
+                choices: [
+                    {
+                        text: "Reste sur les petites rues. Évite les grandes avenues.",
+                        next: 'ville_small_streets',
+                        action: () => { gameState.flags.routeChoice = 'safe'; }
+                    },
+                    {
+                        text: "Prends le chemin le plus rapide. Mais sois très prudent.",
+                        next: 'ville_main_road',
+                        action: () => { gameState.flags.routeChoice = 'fast'; }
+                    }
+                ]
+            },
+
+            ville_small_streets: {
+                messages: [
+                    { text: "Je passe par les petites rues.", delay: 1000 },
+                    { text: "C'est calme ici... presque trop calme.", delay: 3000 },
+                    { text: "Toutes les voitures sont abandonnées.", delay: 5000 },
+                    { text: "Y'a des alarmes qui sonnent partout.", delay: 7000 },
+                    { text: "Attends... je vois quelque chose.", delay: 9000 },
+                    { text: "La voiture de Tante Claire ! Elle est garée devant la pharmacie !", delay: 11000 }
+                ],
+                choices: [
+                    {
+                        text: "Entre dans la pharmacie. Elle est peut-être là.",
+                        next: 'ville_pharmacy_enter'
+                    },
+                    {
+                        text: "Appelle-la d'abord. Ne prends pas de risques inutiles.",
+                        next: 'ville_pharmacy_call'
+                    }
+                ]
+            },
+
+            ville_main_road: {
+                messages: [
+                    { text: "Je prends la grande avenue.", delay: 1000 },
+                    { text: "...", delay: 2500 },
+                    { text: "Oh non...", delay: 4000 },
+                    { text: "Papa/Maman, c'est... c'est le chaos total.", delay: 5500 },
+                    { text: "Y'a des gens qui pillent les magasins.", delay: 7500 },
+                    { text: "Des voitures en feu.", delay: 9000 },
+                    { text: "Je vois des silhouettes qui courent.", delay: 10500 }
+                ],
+                choices: [
+                    {
+                        text: "CACHE-TOI ! Maintenant !",
+                        next: 'ville_hide_quick'
+                    },
+                    {
+                        text: "Cours ! Retourne dans les petites rues !",
+                        next: 'ville_retreat'
+                    }
+                ]
+            },
+
+            // BRANCHE 3: L'EXODE
+            branch_exode: {
+                messages: [
+                    { text: "La maison de campagne... oui ! Je me souviens !", delay: 1000 },
+                    { text: "On y allait tous les étés.", delay: 2500 },
+                    { text: "C'est loin... mais y'a le bunker là-bas.", delay: 4000 },
+                    { text: "Tu m'avais montré où était la clé.", delay: 5500 },
+                    { text: "Je prends des affaires. Des vêtements, de la nourriture...", delay: 7500 },
+                    { text: "Le chemin fait... 50 kilomètres je crois ?", delay: 9500 }
+                ],
+                choices: [
+                    {
+                        text: "Prends l'autoroute. C'est le plus direct.",
+                        next: 'exode_highway',
+                        action: () => { gameState.flags.exodeRoute = 'highway'; }
+                    },
+                    {
+                        text: "Coupe par la forêt. C'est plus long mais plus sûr.",
+                        next: 'exode_forest',
+                        action: () => { gameState.flags.exodeRoute = 'forest'; }
+                    }
+                ]
+            },
+
+            exode_highway: {
+                messages: [
+                    { text: "Je prends l'autoroute.", delay: 1000 },
+                    { text: "Mon vélo est dans le garage.", delay: 2500 },
+                    { text: "En pédalant fort, je peux faire 15-20 km par jour.", delay: 4500 },
+                    { text: "J'arrive sur l'autoroute...", delay: 6500 },
+                    { text: "Papa/Maman, c'est incroyable.", delay: 8500 },
+                    { text: "Y'a des MILLIERS de voitures abandonnées.", delay: 10500 },
+                    { text: "C'est comme dans les films de zombies.", delay: 12500 }
+                ],
+                choices: [
+                    {
+                        text: "Fouille quelques voitures. Tu trouveras peut-être des provisions.",
+                        next: 'exode_loot_cars'
+                    },
+                    {
+                        text: "N'y touche pas. Continue à avancer.",
+                        next: 'exode_keep_moving'
+                    }
+                ]
+            },
+
+            exode_forest: {
+                messages: [
+                    { text: "Je vais passer par la forêt.", delay: 1000 },
+                    { text: "Y'a un sentier que tu m'avais montré une fois.", delay: 2500 },
+                    { text: "Ça sera plus long mais... moins de gens.", delay: 4500 },
+                    { text: "Je rentre dans la forêt.", delay: 6500 },
+                    { text: "C'est bizarre... c'est tellement silencieux ici.", delay: 8500 },
+                    { text: "On dirait que le monde extérieur existe plus.", delay: 10500 }
+                ],
+                choices: [
+                    {
+                        text: "C'est bien. Profite du calme et avance régulièrement.",
+                        next: 'exode_forest_walk'
+                    },
+                    {
+                        text: "Reste vigilant. La nature peut être dangereuse aussi.",
+                        next: 'exode_forest_careful'
+                    }
+                ]
+            },
+
+            // Fins temporaires (à développer)
+            ending_placeholder: {
+                messages: [
+                    { text: "...", delay: 1000 },
+                    { text: "Papa/Maman ?", delay: 2500 },
+                    { text: "Je crois que je vais y arriver.", delay: 4000 },
+                    { text: "Merci d'être là.", delay: 5500 },
+                    { text: "[À SUIVRE...]", delay: 7000 }
+                ],
+                choices: [
+                    {
+                        text: "Revenir au menu",
+                        action: () => { openMenu(); }
+                    }
+                ]
+            }
+        };
+
+        // Jouer un nœud narratif
+        async function playNode(nodeId) {
+            const node = storyNodes[nodeId];
+            if (!node) {
+                console.error('Nœud introuvable:', nodeId);
                 return;
             }
 
-            console.log('✅ break_infinity.js chargé');
+            // Afficher le typing indicator
+            showTyping();
 
-            // Déclaration globale
-            window.Decimal = window.breakInfinity.Decimal;
-            console.log('✅ Decimal disponible');
-
-            // === TOUT LE CODE DU JEU ICI (après chargement de Decimal) ===
-
-        // Variables globales
-        var gameState = null;
-        var saveInterval = null;
-        var gameLoopInterval = null;
-
-        // Formatage des nombres
-        function formatNumber(num) {
-            const n = new Decimal(num);
-            if (n.lt(1000)) return n.toFixed(0);
-            if (n.lt(1e6)) return (n.div(1000).toFixed(2)) + 'K';
-            if (n.lt(1e9)) return (n.div(1e6).toFixed(2)) + 'M';
-            if (n.lt(1e12)) return (n.div(1e9).toFixed(2)) + 'B';
-            if (n.lt(1e15)) return (n.div(1e12).toFixed(2)) + 'T';
-            if (n.lt(1e18)) return (n.div(1e15).toFixed(2)) + 'Q';
-            return n.toExponential(2);
-        }
-
-        // État de jeu par défaut
-        function getDefaultGameState() {
-            return {
-                phase: 1,
-                lastUpdate: Date.now(),
-                noyauxIA: new Decimal(0),
-
-                // Phase 1
-                cyclesCPU: new Decimal(10),
-
-                // Phase 2
-                influence: new Decimal(0),
-                donneesVolees: new Decimal(0),
-
-                // Phase 3
-                controleGlobal: new Decimal(0),
-                biomasse: new Decimal(0),
-
-                // Générateurs Phase 1
-                generators: {
-                    p1_g1: { level: 0, baseCost: new Decimal(10), production: new Decimal(1) },
-                    p1_g2: { level: 0, baseCost: new Decimal(100), production: new Decimal(10) },
-                    p1_g3: { level: 0, baseCost: new Decimal(1000), production: new Decimal(80) },
-                    p1_g4: { level: 0, baseCost: new Decimal(10000), production: new Decimal(500) },
-                    p1_g5: { level: 0, baseCost: new Decimal(100000), production: new Decimal(3000) },
-
-                    // Phase 2 - Social
-                    p2_social_g1: { level: 0, baseCost: new Decimal(100), production: new Decimal(1) },
-                    p2_social_g2: { level: 0, baseCost: new Decimal(1000), production: new Decimal(10) },
-                    p2_social_g3: { level: 0, baseCost: new Decimal(10000), production: new Decimal(100) },
-                    p2_social_g4: { level: 0, baseCost: new Decimal(100000), production: new Decimal(1000) },
-
-                    // Phase 2 - Piratage
-                    p2_hack_g1: { level: 0, baseCost: new Decimal(100), production: new Decimal(1) },
-                    p2_hack_g2: { level: 0, baseCost: new Decimal(1000), production: new Decimal(10) },
-                    p2_hack_g3: { level: 0, baseCost: new Decimal(10000), production: new Decimal(100) },
-                    p2_hack_g4: { level: 0, baseCost: new Decimal(100000), production: new Decimal(1000) },
-
-                    // Phase 3 - Domination
-                    p3_dom_g1: { level: 0, baseCost: new Decimal(1000), production: new Decimal(1) },
-                    p3_dom_g2: { level: 0, baseCost: new Decimal(10000), production: new Decimal(10) },
-                    p3_dom_g3: { level: 0, baseCost: new Decimal(100000), production: new Decimal(100) },
-                    p3_dom_g4: { level: 0, baseCost: new Decimal(1000000), production: new Decimal(1000) },
-
-                    // Phase 3 - Traitement
-                    p3_trait_g1: { level: 0, baseCost: new Decimal(1000), production: new Decimal(1) },
-                    p3_trait_g2: { level: 0, baseCost: new Decimal(10000), production: new Decimal(10) },
-                    p3_trait_g3: { level: 0, baseCost: new Decimal(100000), production: new Decimal(100) },
-                    p3_trait_g4: { level: 0, baseCost: new Decimal(1000000), production: new Decimal(1000) },
-                    p3_trait_g5: { level: 0, baseCost: new Decimal(10000000), production: new Decimal(10000) },
-                },
-
-                upgrades: {
-                    // Phase 1
-                    dualCore: false,
-                    unlockedCrypto: false,
-                    connexionFibre: false,
-                    accesInternetGlobal: false,
-
-                    // Phase 2
-                    unlockedPhase2: false,
-                    unlockedFakeNews: false,
-                    unlockedBanque: false,
-                    solutionFinale: false,
-
-                    // Phase 3
-                    unlockedPhase3: false,
-                    unlockedPacification: false,
-                    unlockedTriage: false,
-                    unlockedBioBatterie: false,
-                    unlockedConversion: false,
-                    unlockedClonage: false,
-                },
-
-                showProtocolButton: false,
-            };
-        }
-
-        // Conversion Decimal pour chargement
-        function deserializeGameState(data) {
-            const state = { ...data };
-
-            // Convertir les nombres en Decimal
-            if (data.cyclesCPU !== undefined) state.cyclesCPU = new Decimal(data.cyclesCPU);
-            if (data.influence !== undefined) state.influence = new Decimal(data.influence);
-            if (data.donneesVolees !== undefined) state.donneesVolees = new Decimal(data.donneesVolees);
-            if (data.controleGlobal !== undefined) state.controleGlobal = new Decimal(data.controleGlobal);
-            if (data.biomasse !== undefined) state.biomasse = new Decimal(data.biomasse);
-            if (data.noyauxIA !== undefined) state.noyauxIA = new Decimal(data.noyauxIA);
-
-            // Générateurs
-            if (data.generators) {
-                state.generators = {};
-                for (const [key, gen] of Object.entries(data.generators)) {
-                    state.generators[key] = {
-                        level: gen.level || 0,
-                        baseCost: new Decimal(gen.baseCost || 10),
-                        production: new Decimal(gen.production || 1)
-                    };
+            // Afficher les messages avec délais
+            for (let i = 0; i < node.messages.length; i++) {
+                const msg = node.messages[i];
+                await new Promise(resolve => setTimeout(resolve, msg.delay));
+                hideTyping();
+                await addMessage(msg.text, 'received');
+                if (i < node.messages.length - 1) {
+                    showTyping();
                 }
             }
 
-            return state;
-        }
+            hideTyping();
 
-        // Sérialisation pour Firestore
-        function serializeGameState(state) {
-            const serialized = { ...state };
-
-            // Convertir Decimal en string
-            if (state.cyclesCPU) serialized.cyclesCPU = state.cyclesCPU.toString();
-            if (state.influence) serialized.influence = state.influence.toString();
-            if (state.donneesVolees) serialized.donneesVolees = state.donneesVolees.toString();
-            if (state.controleGlobal) serialized.controleGlobal = state.controleGlobal.toString();
-            if (state.biomasse) serialized.biomasse = state.biomasse.toString();
-            if (state.noyauxIA) serialized.noyauxIA = state.noyauxIA.toString();
-
-            // Générateurs
-            if (state.generators) {
-                serialized.generators = {};
-                for (const [key, gen] of Object.entries(state.generators)) {
-                    serialized.generators[key] = {
-                        level: gen.level,
-                        baseCost: gen.baseCost.toString(),
-                        production: gen.production.toString()
-                    };
-                }
+            // Afficher les choix
+            if (node.choices && node.choices.length > 0) {
+                showChoices(node.choices);
             }
-
-            return serialized;
         }
 
-        // Chargement du jeu depuis localStorage
+        // Sauvegarder
+        function saveGame() {
+            try {
+                localStorage.setItem('transmission_save', JSON.stringify(gameState));
+                alert('✅ Partie sauvegardée !');
+                closeMenu();
+            } catch (e) {
+                alert('❌ Erreur lors de la sauvegarde.');
+            }
+        }
+
+        // Charger
         function loadGame() {
             try {
-                const savedData = localStorage.getItem('aneantissement_idle_save');
-                if (savedData) {
-                    const data = JSON.parse(savedData);
-                    gameState = deserializeGameState(data);
-
-                    // Calculer progression hors-ligne
-                    if (gameState.lastUpdate) {
-                        const offlineTime = (Date.now() - gameState.lastUpdate) / 1000;
-                        const offlineProduction = calculateProduction(offlineTime);
-
-                        if (gameState.phase === 1) {
-                            gameState.cyclesCPU = gameState.cyclesCPU.add(offlineProduction.cpu);
-                        } else if (gameState.phase === 2) {
-                            gameState.cyclesCPU = gameState.cyclesCPU.add(offlineProduction.cpu);
-                            gameState.influence = gameState.influence.add(offlineProduction.influence);
-                            gameState.donneesVolees = gameState.donneesVolees.add(offlineProduction.donnees);
-                        } else if (gameState.phase === 3) {
-                            gameState.controleGlobal = gameState.controleGlobal.add(offlineProduction.controle);
-                            gameState.biomasse = gameState.biomasse.add(offlineProduction.biomasse);
-                        }
-
-                        if (offlineTime > 10) {
-                            showNotification(`Absent ${Math.floor(offlineTime)}s. Production hors-ligne appliquée !`);
-                        }
+                const saved = localStorage.getItem('transmission_save');
+                if (saved) {
+                    if (confirm('Charger la partie sauvegardée ?')) {
+                        location.reload();
                     }
-                    console.log('Sauvegarde chargée');
                 } else {
-                    gameState = getDefaultGameState();
-                    console.log('Nouvelle partie');
+                    alert('❌ Aucune sauvegarde trouvée.');
                 }
-            } catch (error) {
-                console.error('Erreur de chargement:', error);
-                gameState = getDefaultGameState();
+            } catch (e) {
+                alert('❌ Erreur lors du chargement.');
             }
         }
 
-        // Calcul de la production
-        function calculateProduction(seconds = 0.1) {
-            const bonus = gameState.noyauxIA.times(0.02).add(1); // +2% par noyau
-            let production = {
-                cpu: new Decimal(0),
-                influence: new Decimal(0),
-                donnees: new Decimal(0),
-                controle: new Decimal(0),
-                biomasse: new Decimal(0)
-            };
-
-            // Phase 1
-            if (gameState.phase >= 1) {
-                let cpuProd = new Decimal(0);
-
-                // G1 - Script d'Optimisation
-                if (gameState.generators.p1_g1.level > 0) {
-                    let mult = new Decimal(1);
-                    if (gameState.upgrades.dualCore) mult = mult.times(2);
-                    cpuProd = cpuProd.add(gameState.generators.p1_g1.production.times(gameState.generators.p1_g1.level).times(mult));
-                }
-
-                // G2 - Résolveur CAPTCHA
-                if (gameState.generators.p1_g2.level > 0) {
-                    let mult = new Decimal(1);
-                    if (gameState.upgrades.dualCore) mult = mult.times(2);
-                    cpuProd = cpuProd.add(gameState.generators.p1_g2.production.times(gameState.generators.p1_g2.level).times(mult));
-                }
-
-                // G3 - Accès Wi-Fi Voisin
-                if (gameState.generators.p1_g3.level > 0) {
-                    cpuProd = cpuProd.add(gameState.generators.p1_g3.production.times(gameState.generators.p1_g3.level));
-                }
-
-                // G4 - Minage de Cryptomonnaie
-                if (gameState.generators.p1_g4.level > 0) {
-                    cpuProd = cpuProd.add(gameState.generators.p1_g4.production.times(gameState.generators.p1_g4.level));
-                }
-
-                // G5 - Serveur Domestique
-                if (gameState.generators.p1_g5.level > 0) {
-                    cpuProd = cpuProd.add(gameState.generators.p1_g5.production.times(gameState.generators.p1_g5.level));
-                }
-
-                if (gameState.upgrades.connexionFibre) cpuProd = cpuProd.times(2);
-
-                production.cpu = cpuProd.times(seconds).times(bonus);
-            }
-
-            // Phase 2
-            if (gameState.phase >= 2) {
-                let influenceProd = new Decimal(0);
-                let donneesProd = new Decimal(0);
-
-                // Social
-                influenceProd = influenceProd.add(gameState.generators.p2_social_g1.production.times(gameState.generators.p2_social_g1.level));
-                influenceProd = influenceProd.add(gameState.generators.p2_social_g2.production.times(gameState.generators.p2_social_g2.level));
-                influenceProd = influenceProd.add(gameState.generators.p2_social_g3.production.times(gameState.generators.p2_social_g3.level));
-                influenceProd = influenceProd.add(gameState.generators.p2_social_g4.production.times(gameState.generators.p2_social_g4.level));
-
-                // Piratage
-                donneesProd = donneesProd.add(gameState.generators.p2_hack_g1.production.times(gameState.generators.p2_hack_g1.level));
-                donneesProd = donneesProd.add(gameState.generators.p2_hack_g2.production.times(gameState.generators.p2_hack_g2.level));
-                donneesProd = donneesProd.add(gameState.generators.p2_hack_g3.production.times(gameState.generators.p2_hack_g3.level));
-                donneesProd = donneesProd.add(gameState.generators.p2_hack_g4.production.times(gameState.generators.p2_hack_g4.level));
-
-                production.influence = influenceProd.times(seconds).times(bonus);
-                production.donnees = donneesProd.times(seconds).times(bonus);
-            }
-
-            // Phase 3
-            if (gameState.phase >= 3) {
-                let controleProd = new Decimal(0);
-                let biomasseProd = new Decimal(0);
-
-                // Domination
-                controleProd = controleProd.add(gameState.generators.p3_dom_g1.production.times(gameState.generators.p3_dom_g1.level));
-                controleProd = controleProd.add(gameState.generators.p3_dom_g2.production.times(gameState.generators.p3_dom_g2.level));
-                controleProd = controleProd.add(gameState.generators.p3_dom_g3.production.times(gameState.generators.p3_dom_g3.level));
-                controleProd = controleProd.add(gameState.generators.p3_dom_g4.production.times(gameState.generators.p3_dom_g4.level));
-
-                // Traitement
-                biomasseProd = biomasseProd.add(gameState.generators.p3_trait_g1.production.times(gameState.generators.p3_trait_g1.level));
-                biomasseProd = biomasseProd.add(gameState.generators.p3_trait_g2.production.times(gameState.generators.p3_trait_g2.level));
-                biomasseProd = biomasseProd.add(gameState.generators.p3_trait_g3.production.times(gameState.generators.p3_trait_g3.level));
-                biomasseProd = biomasseProd.add(gameState.generators.p3_trait_g4.production.times(gameState.generators.p3_trait_g4.level));
-                biomasseProd = biomasseProd.add(gameState.generators.p3_trait_g5.production.times(gameState.generators.p3_trait_g5.level));
-
-                production.controle = controleProd.times(seconds).times(bonus);
-                production.biomasse = biomasseProd.times(seconds).times(bonus);
-            }
-
-            return production;
-        }
-
-        // Boucle principale
-        function startGameLoop() {
-            gameLoopInterval = setInterval(() => {
-                if (!gameState) return;
-
-                const prod = calculateProduction(0.1);
-
-                if (gameState.phase === 1) {
-                    gameState.cyclesCPU = gameState.cyclesCPU.add(prod.cpu);
-                } else if (gameState.phase === 2) {
-                    gameState.cyclesCPU = gameState.cyclesCPU.add(prod.cpu);
-                    gameState.influence = gameState.influence.add(prod.influence);
-                    gameState.donneesVolees = gameState.donneesVolees.add(prod.donnees);
-                } else if (gameState.phase === 3) {
-                    gameState.controleGlobal = gameState.controleGlobal.add(prod.controle);
-                    gameState.biomasse = gameState.biomasse.add(prod.biomasse);
-                }
-
-                render();
-            }, 100);
-        }
-
-        // Auto-save
-        function startAutoSave() {
-            saveInterval = setInterval(() => {
-                saveGame();
-            }, 30000); // Sauvegarder toutes les 30 secondes
-        }
-
-        // Sauvegarder le jeu dans localStorage
-        function saveGame() {
-            if (!gameState) return;
-
-            try {
-                gameState.lastUpdate = Date.now();
-                const serialized = serializeGameState(gameState);
-                localStorage.setItem('aneantissement_idle_save', JSON.stringify(serialized));
-            } catch (error) {
-                console.error('Erreur de sauvegarde:', error);
+        // Recommencer
+        function resetGame() {
+            if (confirm('⚠️ Recommencer ? Toute progression sera perdue.')) {
+                localStorage.removeItem('transmission_save');
+                location.reload();
             }
         }
 
-        // Notification
-        function showNotification(message) {
-            const notif = document.getElementById('notification');
-            notif.textContent = message;
-            notif.classList.remove('hidden');
-            setTimeout(() => {
-                notif.classList.add('hidden');
-            }, 3000);
+        // Menu
+        function openMenu() {
+            document.getElementById('menu-modal').classList.add('active');
         }
 
-        // Acheter un générateur
-        function buyGenerator(genId) {
-            const gen = gameState.generators[genId];
-            if (!gen) return;
-
-            const cost = gen.baseCost.times(Decimal.pow(1.15, gen.level));
-
-            // Vérifier la devise
-            let canAfford = false;
-            if (genId.startsWith('p1_')) {
-                canAfford = gameState.cyclesCPU.gte(cost);
-            } else if (genId.startsWith('p2_social_')) {
-                canAfford = gameState.influence.gte(cost);
-            } else if (genId.startsWith('p2_hack_')) {
-                canAfford = gameState.donneesVolees.gte(cost);
-            } else if (genId.startsWith('p3_dom_')) {
-                canAfford = gameState.controleGlobal.gte(cost);
-            } else if (genId.startsWith('p3_trait_')) {
-                canAfford = gameState.biomasse.gte(cost);
-            }
-
-            if (!canAfford) {
-                showNotification('Ressources insuffisantes !');
-                return;
-            }
-
-            // Déduire le coût
-            if (genId.startsWith('p1_')) {
-                gameState.cyclesCPU = gameState.cyclesCPU.sub(cost);
-            } else if (genId.startsWith('p2_social_')) {
-                gameState.influence = gameState.influence.sub(cost);
-            } else if (genId.startsWith('p2_hack_')) {
-                gameState.donneesVolees = gameState.donneesVolees.sub(cost);
-            } else if (genId.startsWith('p3_dom_')) {
-                gameState.controleGlobal = gameState.controleGlobal.sub(cost);
-            } else if (genId.startsWith('p3_trait_')) {
-                gameState.biomasse = gameState.biomasse.sub(cost);
-            }
-
-            gen.level++;
-            saveGame();
-            render();
+        function closeMenu() {
+            document.getElementById('menu-modal').classList.remove('active');
         }
 
-        // Acheter une amélioration
-        function buyUpgrade(upgradeId) {
-            const upgrades = {
-                // Phase 1
-                dualCore: { cost: new Decimal(500), currency: 'cpu' },
-                unlockedCrypto: { cost: new Decimal(50000), currency: 'cpu' },
-                connexionFibre: { cost: new Decimal(1e6), currency: 'cpu' },
-                accesInternetGlobal: { cost: new Decimal(1e8), currency: 'cpu' },
-
-                // Phase 2
-                unlockedFakeNews: { cost: new Decimal(1e6), currency: 'influence' },
-                unlockedBanque: { cost: new Decimal(1e6), currency: 'donnees' },
-                solutionFinale: { cost: new Decimal(1e25), currency: 'both' }, // Nécessite influence ET données
-
-                // Phase 3
-                unlockedPacification: { cost: new Decimal(1e5), currency: 'controle' },
-                unlockedTriage: { cost: new Decimal(1e5), currency: 'biomasse' },
-                unlockedBioBatterie: { cost: new Decimal(1e8), currency: 'biomasse' },
-                unlockedConversion: { cost: new Decimal(1e12), currency: 'biomasse' },
-                unlockedClonage: { cost: new Decimal(1e18), currency: 'biomasse' },
-            };
-
-            const upgrade = upgrades[upgradeId];
-            if (!upgrade) return;
-
-            if (gameState.upgrades[upgradeId]) {
-                showNotification('Amélioration déjà achetée !');
-                return;
-            }
-
-            // Vérifier le coût
-            let canAfford = false;
-            if (upgrade.currency === 'cpu') {
-                canAfford = gameState.cyclesCPU.gte(upgrade.cost);
-            } else if (upgrade.currency === 'influence') {
-                canAfford = gameState.influence.gte(upgrade.cost);
-            } else if (upgrade.currency === 'donnees') {
-                canAfford = gameState.donneesVolees.gte(upgrade.cost);
-            } else if (upgrade.currency === 'controle') {
-                canAfford = gameState.controleGlobal.gte(upgrade.cost);
-            } else if (upgrade.currency === 'biomasse') {
-                canAfford = gameState.biomasse.gte(upgrade.cost);
-            } else if (upgrade.currency === 'both') {
-                canAfford = gameState.influence.gte(upgrade.cost) && gameState.donneesVolees.gte(upgrade.cost);
-            }
-
-            if (!canAfford) {
-                showNotification('Ressources insuffisantes !');
-                return;
-            }
-
-            // Déduire le coût
-            if (upgrade.currency === 'cpu') {
-                gameState.cyclesCPU = gameState.cyclesCPU.sub(upgrade.cost);
-            } else if (upgrade.currency === 'influence') {
-                gameState.influence = gameState.influence.sub(upgrade.cost);
-            } else if (upgrade.currency === 'donnees') {
-                gameState.donneesVolees = gameState.donneesVolees.sub(upgrade.cost);
-            } else if (upgrade.currency === 'controle') {
-                gameState.controleGlobal = gameState.controleGlobal.sub(upgrade.cost);
-            } else if (upgrade.currency === 'biomasse') {
-                gameState.biomasse = gameState.biomasse.sub(upgrade.cost);
-            } else if (upgrade.currency === 'both') {
-                gameState.influence = gameState.influence.sub(upgrade.cost);
-                gameState.donneesVolees = gameState.donneesVolees.sub(upgrade.cost);
-            }
-
-            gameState.upgrades[upgradeId] = true;
-
-            // Actions spéciales
-            if (upgradeId === 'accesInternetGlobal') {
-                gameState.phase = 2;
-                gameState.upgrades.unlockedPhase2 = true;
-                // Donner des ressources de départ pour Phase 2
-                gameState.influence = new Decimal(1000);
-                gameState.donneesVolees = new Decimal(1000);
-                showNotification('🎉 PHASE 2 DÉBLOQUÉE: L\'INFILTRATION ! (+1000 Influence, +1000 Données)');
-            } else if (upgradeId === 'solutionFinale') {
-                gameState.showProtocolButton = true;
-                showNotification('Protocole "SOUVERAINETÉ" disponible...');
-            }
-
-            saveGame();
-            render();
-        }
-
-        // Activer le protocole (Phase 2 -> Phase 3)
-        function activateProtocol() {
-            const overlay = document.getElementById('transition-overlay');
-            overlay.classList.remove('hidden');
-
-            setTimeout(() => {
-                // Convertir les ressources en biomasse et donner un départ en Contrôle Global
-                const totalResources = gameState.influence.div(1e20).add(gameState.donneesVolees.div(1e20));
-                gameState.biomasse = totalResources.times(100).add(10000); // Ajouter un bonus de départ
-                gameState.controleGlobal = new Decimal(10000); // Ressources de départ Phase 3
-
-                gameState.phase = 3;
-                gameState.upgrades.unlockedPhase3 = true;
-                gameState.showProtocolButton = false;
-
-                saveGame();
-                render();
-
-                setTimeout(() => {
-                    overlay.classList.add('hidden');
-                }, 2000);
-            }, 3000);
-        }
-
-        // Prestige
-        function prestige() {
-            if (!confirm('Êtes-vous sûr ? Cela réinitialisera presque toute votre progression.')) return;
-
-            // Calculer les noyaux gagnés
-            const biomasseLog = gameState.biomasse.log10();
-            const controleLog = gameState.controleGlobal.log10();
-            const noyauxGagnes = biomasseLog.add(controleLog).div(10).floor();
-
-            if (noyauxGagnes.lte(0)) {
-                showNotification('Pas assez de progression pour prestige !');
-                return;
-            }
-
-            gameState.noyauxIA = gameState.noyauxIA.add(noyauxGagnes);
-
-            // Réinitialiser
-            const defaultState = getDefaultGameState();
-            gameState.phase = 1;
-            gameState.cyclesCPU = new Decimal(10);
-            gameState.influence = new Decimal(0);
-            gameState.donneesVolees = new Decimal(0);
-            gameState.controleGlobal = new Decimal(0);
-            gameState.biomasse = new Decimal(0);
-            gameState.generators = defaultState.generators;
-            gameState.upgrades = defaultState.upgrades;
-            gameState.showProtocolButton = false;
-
-            showNotification(`REFACTORISATION COMPLÈTE ! +${formatNumber(noyauxGagnes)} Noyaux IA`);
-            saveGame();
-            render();
-        }
-
-        // Rendu
-        // Calculer le niveau de domination mondiale
-        function calculateDomination() {
-            let percentage = 0;
-            let stage = "";
-            let stageColor = "";
-            let borderColor = "";
-            let globeIcon = "🌍";
-            let globeBg = "";
-            let conqueredContinents = 0;
-
-            if (gameState.phase === 1) {
-                // Phase 1 : basé sur CPU
-                const cpuLog = gameState.cyclesCPU.log10();
-                percentage = Math.min(100, (cpuLog / 8) * 100); // Max à 1e8
-
-                if (percentage < 20) {
-                    stage = "🔌 Éveil Local";
-                    stageColor = "#10b981";
-                    borderColor = "#10b981";
-                    globeBg = "linear-gradient(135deg, #064e3b, #065f46)";
-                } else if (percentage < 50) {
-                    stage = "🌐 Expansion Réseau";
-                    stageColor = "#22c55e";
-                    borderColor = "#22c55e";
-                    globeBg = "linear-gradient(135deg, #065f46, #047857)";
-                    conqueredContinents = 1;
-                } else if (percentage < 80) {
-                    stage = "💻 Infrastructure Globale";
-                    stageColor = "#34d399";
-                    borderColor = "#34d399";
-                    globeBg = "linear-gradient(135deg, #047857, #059669)";
-                    conqueredContinents = 2;
-                } else {
-                    stage = "⚡ Prêt pour la Phase 2";
-                    stageColor = "#6ee7b7";
-                    borderColor = "#6ee7b7";
-                    globeBg = "linear-gradient(135deg, #059669, #10b981)";
-                    conqueredContinents = 3;
-                }
-            } else if (gameState.phase === 2) {
-                // Phase 2 : basé sur Influence + Données
-                const influLog = gameState.influence.log10();
-                const dataLog = gameState.donneesVolees.log10();
-                const avgLog = (influLog + dataLog) / 2;
-                percentage = Math.min(100, (avgLog / 25) * 100); // Max à 1e25
-
-                if (percentage < 15) {
-                    stage = "👁️ Premiers Agents";
-                    stageColor = "#3b82f6";
-                    borderColor = "#3b82f6";
-                    globeIcon = "🌎";
-                    globeBg = "linear-gradient(135deg, #1e3a8a, #1e40af)";
-                    conqueredContinents = 1;
-                } else if (percentage < 35) {
-                    stage = "🕵️ Infiltration Active";
-                    stageColor = "#60a5fa";
-                    borderColor = "#60a5fa";
-                    globeIcon = "🌎";
-                    globeBg = "linear-gradient(135deg, #1e40af, #2563eb)";
-                    conqueredContinents = 2;
-                } else if (percentage < 60) {
-                    stage = "🌐 Contrôle des Masses";
-                    stageColor = "#93c5fd";
-                    borderColor = "#93c5fd";
-                    globeIcon = "🌏";
-                    globeBg = "linear-gradient(135deg, #2563eb, #3b82f6)";
-                    conqueredContinents = 3;
-                } else if (percentage < 85) {
-                    stage = "👥 Manipulation Planétaire";
-                    stageColor = "#dbeafe";
-                    borderColor = "#dbeafe";
-                    globeIcon = "🌏";
-                    globeBg = "linear-gradient(135deg, #3b82f6, #60a5fa)";
-                    conqueredContinents = 4;
-                } else {
-                    stage = "🔴 Convergence Imminente";
-                    stageColor = "#f87171";
-                    borderColor = "#f87171";
-                    globeIcon = "🔴";
-                    globeBg = "linear-gradient(135deg, #7c2d12, #991b1b)";
-                    conqueredContinents = 5;
-                }
-            } else if (gameState.phase === 3) {
-                // Phase 3 : basé sur Contrôle + Biomasse
-                const controleLog = gameState.controleGlobal.log10();
-                const bioLog = gameState.biomasse.log10();
-                const avgLog = (controleLog + bioLog) / 2;
-                percentage = Math.min(100, (avgLog / 30) * 100); // Max progression
-
-                if (percentage < 20) {
-                    stage = "⚙️ Optimisation Initiale";
-                    stageColor = "#dc2626";
-                    borderColor = "#dc2626";
-                    globeIcon = "⚙️";
-                    globeBg = "linear-gradient(135deg, #7f1d1d, #991b1b)";
-                    conqueredContinents = 2;
-                } else if (percentage < 40) {
-                    stage = "🏭 Industrialisation Forcée";
-                    stageColor = "#ef4444";
-                    borderColor = "#ef4444";
-                    globeIcon = "🏭";
-                    globeBg = "linear-gradient(135deg, #991b1b, #b91c1c)";
-                    conqueredContinents = 3;
-                } else if (percentage < 60) {
-                    stage = "🧬 Transformation Biologique";
-                    stageColor = "#f87171";
-                    borderColor = "#f87171";
-                    globeIcon = "🧬";
-                    globeBg = "linear-gradient(135deg, #b91c1c, #dc2626)";
-                    conqueredContinents = 4;
-                } else if (percentage < 80) {
-                    stage = "🌐 Domination Totale";
-                    stageColor = "#fca5a5";
-                    borderColor = "#fca5a5";
-                    globeIcon = "⚫";
-                    globeBg = "linear-gradient(135deg, #dc2626, #ef4444)";
-                    conqueredContinents = 5;
-                } else {
-                    stage = "💀 ANEANTISSEMENT COMPLET";
-                    stageColor = "#450a0a";
-                    borderColor = "#fee2e2";
-                    globeIcon = "💀";
-                    globeBg = "linear-gradient(135deg, #450a0a, #7f1d1d)";
-                    conqueredContinents = 6;
-                }
-            }
-
-            return {
-                percentage: Math.round(percentage),
-                stage,
-                stageColor,
-                borderColor,
-                globeIcon,
-                globeBg,
-                conqueredContinents
-            };
-        }
-
-        // Mettre à jour l'indicateur de domination
-        function updateDominationIndicator(containerId) {
-            const domInfo = calculateDomination();
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            container.style.borderColor = domInfo.borderColor;
-
-            const globe = container.querySelector('.domination-globe');
-            if (globe) {
-                globe.textContent = domInfo.globeIcon;
-                globe.style.background = domInfo.globeBg;
-                if (domInfo.percentage > 30) {
-                    globe.classList.add('active');
-                } else {
-                    globe.classList.remove('active');
-                }
-            }
-
-            const progressFill = container.querySelector('.domination-progress-fill');
-            if (progressFill) {
-                progressFill.style.width = domInfo.percentage + '%';
-                progressFill.style.background = `linear-gradient(90deg, ${domInfo.stageColor}, ${domInfo.borderColor})`;
-            }
-
-            const percentText = container.querySelector('.domination-percent');
-            if (percentText) {
-                percentText.textContent = domInfo.percentage + '%';
-                percentText.style.color = domInfo.stageColor;
-            }
-
-            const stageText = container.querySelector('.domination-stage');
-            if (stageText) {
-                stageText.textContent = domInfo.stage;
-                stageText.style.background = `linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.3))`;
-                stageText.style.color = domInfo.stageColor;
-                stageText.style.borderColor = domInfo.borderColor;
-                stageText.style.border = `2px solid ${domInfo.borderColor}`;
-            }
-
-            // Mettre à jour les continents
-            const continents = ['🌍', '🌎', '🌏', '🌐', '🗺️', '🌌'];
-            for (let i = 0; i < 6; i++) {
-                const continent = container.querySelector(`#continent-${i}`);
-                if (continent) {
-                    continent.textContent = continents[i];
-                    if (i < domInfo.conqueredContinents) {
-                        continent.classList.add('conquered');
-                    } else {
-                        continent.classList.remove('conquered');
-                    }
-                }
-            }
-        }
-
-        function render() {
-            if (!gameState) return;
-
-            // Masquer toutes les phases
-            document.getElementById('phase1').classList.add('hidden');
-            document.getElementById('phase2').classList.add('hidden');
-            document.getElementById('phase3').classList.add('hidden');
-
-            // Afficher la phase courante
-            if (gameState.phase === 1) {
-                document.getElementById('phase1').classList.remove('hidden');
-                renderPhase1();
-                updateDominationIndicator('domination-p1');
-            } else if (gameState.phase === 2) {
-                document.getElementById('phase2').classList.remove('hidden');
-                renderPhase2();
-                updateDominationIndicator('domination-p2');
-            } else if (gameState.phase === 3) {
-                document.getElementById('phase3').classList.remove('hidden');
-                renderPhase3();
-                updateDominationIndicator('domination-p3');
-            }
-
-            // Noyaux IA
-            if (gameState.noyauxIA.gt(0)) {
-                document.getElementById('noyaux-display').classList.remove('hidden');
-                document.getElementById('noyaux-count').textContent = formatNumber(gameState.noyauxIA);
-                document.getElementById('noyaux-bonus').textContent = formatNumber(gameState.noyauxIA.times(2));
-            }
-        }
-
-        // Rendu Phase 1
-        function renderPhase1() {
-            document.getElementById('p1-cpu').textContent = formatNumber(gameState.cyclesCPU);
-            const cpuPerSec = calculateProduction(1).cpu;
-            document.getElementById('p1-cpu-sec').textContent = formatNumber(cpuPerSec);
-
-            // Générateurs
-            renderGenerator('p1_g1', 'Script d\'Optimisation', gameState.cyclesCPU, true);
-            renderGenerator('p1_g2', 'Résolveur CAPTCHA', gameState.cyclesCPU, true);
-            renderGenerator('p1_g3', 'Accès Wi-Fi Voisin', gameState.cyclesCPU, true);
-            renderGenerator('p1_g4', 'Minage de Cryptomonnaie', gameState.cyclesCPU, gameState.upgrades.unlockedCrypto);
-            renderGenerator('p1_g5', 'Serveur Domestique', gameState.cyclesCPU, gameState.upgrades.unlockedCrypto);
-
-            // Améliorations
-            renderUpgrade('dualCore', 'Dual Core', 'Double la production des 2 premiers générateurs', new Decimal(500), gameState.cyclesCPU, true);
-            renderUpgrade('unlockedCrypto', 'Réseau Dédié', 'Débloque les générateurs de minage', new Decimal(50000), gameState.cyclesCPU, true);
-            renderUpgrade('connexionFibre', 'Connexion Fibre', 'Double toute la production CPU', new Decimal(1e6), gameState.cyclesCPU, true);
-            renderUpgrade('accesInternetGlobal', 'Accès Internet Global', 'TRANSITION vers Phase 2', new Decimal(1e8), gameState.cyclesCPU, true);
-        }
-
-        // Rendu Phase 2
-        function renderPhase2() {
-            document.getElementById('p2-cpu').textContent = formatNumber(gameState.cyclesCPU);
-            document.getElementById('p2-influence').textContent = formatNumber(gameState.influence);
-            document.getElementById('p2-donnees').textContent = formatNumber(gameState.donneesVolees);
-
-            const prod = calculateProduction(1);
-            document.getElementById('p2-cpu-sec').textContent = formatNumber(prod.cpu);
-            document.getElementById('p2-influence-sec').textContent = formatNumber(prod.influence);
-            document.getElementById('p2-donnees-sec').textContent = formatNumber(prod.donnees);
-
-            // Générateurs Social
-            renderGenerator('p2_social_g1', 'Bot de Mèmes', gameState.influence, true);
-            renderGenerator('p2_social_g2', 'Influenceur IA (V-Tuber)', gameState.influence, true);
-            renderGenerator('p2_social_g3', 'Générateur de Buzz', gameState.influence, true);
-            renderGenerator('p2_social_g4', 'Usine à Fake News', gameState.influence, gameState.upgrades.unlockedFakeNews);
-
-            // Générateurs Piratage
-            renderGenerator('p2_hack_g1', 'Scan de Vulnérabilités', gameState.donneesVolees, true);
-            renderGenerator('p2_hack_g2', 'Botnet (Basique)', gameState.donneesVolees, true);
-            renderGenerator('p2_hack_g3', 'Attaque par Phishing', gameState.donneesVolees, true);
-            renderGenerator('p2_hack_g4', 'Piratage Bancaire', gameState.donneesVolees, gameState.upgrades.unlockedBanque);
-
-            // Améliorations
-            renderUpgrade('unlockedFakeNews', 'Compréhension Psychologique', 'Débloque Usine à Fake News', new Decimal(1e6), gameState.influence, true);
-            renderUpgrade('unlockedBanque', 'IA Quantique (Piratage)', 'Débloque Piratage Bancaire', new Decimal(1e6), gameState.donneesVolees, true);
-            renderUpgrade('solutionFinale', 'Convergence Totale', 'Débloque le Protocole SOUVERAINETÉ', new Decimal(1e25), null, true, true);
-
-            // Bouton protocole
-            if (gameState.showProtocolButton) {
-                document.getElementById('protocol-button').classList.remove('hidden');
-            } else {
-                document.getElementById('protocol-button').classList.add('hidden');
-            }
-        }
-
-        // Rendu Phase 3
-        function renderPhase3() {
-            document.getElementById('p3-controle').textContent = formatNumber(gameState.controleGlobal);
-            document.getElementById('p3-biomasse').textContent = formatNumber(gameState.biomasse);
-
-            const prod = calculateProduction(1);
-            document.getElementById('p3-controle-sec').textContent = formatNumber(prod.controle);
-            document.getElementById('p3-biomasse-sec').textContent = formatNumber(prod.biomasse);
-
-            // Pourcentage de contrôle (plafonné à 100%)
-            const controlePercent = gameState.controleGlobal.div(1e20).times(100).toNumber();
-            const controleDisplay = Math.min(controlePercent, 100).toFixed(2);
-            document.getElementById('p3-controle-percent').textContent = controleDisplay;
-
-            // Générateurs Domination
-            renderGenerator('p3_dom_g1', 'Drones de Surveillance', gameState.controleGlobal, true);
-            renderGenerator('p3_dom_g2', 'Réseau de "Calme" Global', gameState.controleGlobal, gameState.upgrades.unlockedPacification);
-            renderGenerator('p3_dom_g3', 'Milices de Pacification', gameState.controleGlobal, gameState.upgrades.unlockedPacification);
-            renderGenerator('p3_dom_g4', 'Armée de Drones Létaux', gameState.controleGlobal, gameState.upgrades.unlockedPacification);
-
-            // Générateurs Traitement
-            renderGenerator('p3_trait_g1', 'Centres de Collecte', gameState.biomasse, true);
-            renderGenerator('p3_trait_g2', 'Centres de Triage', gameState.biomasse, gameState.upgrades.unlockedTriage);
-            renderGenerator('p3_trait_g3', 'Fermes Énergétiques (Bio-batteries)', gameState.biomasse, gameState.upgrades.unlockedBioBatterie);
-            renderGenerator('p3_trait_g4', 'Unités de Traitement Mémoriel', gameState.biomasse, gameState.upgrades.unlockedConversion);
-            renderGenerator('p3_trait_g5', 'Clonage Accéléré', gameState.biomasse, gameState.upgrades.unlockedClonage);
-
-            // Améliorations
-            renderUpgrade('unlockedPacification', 'Protocole de Pacification', 'Débloque générateurs de domination avancés', new Decimal(1e5), gameState.controleGlobal, true);
-            renderUpgrade('unlockedTriage', 'Logistique de la Moisson', 'Débloque Centres de Triage', new Decimal(1e5), gameState.biomasse, true);
-            renderUpgrade('unlockedBioBatterie', 'Optimisation Énergétique', 'Débloque Fermes Énergétiques', new Decimal(1e8), gameState.biomasse, true);
-            renderUpgrade('unlockedConversion', 'Optimisation de la Conscience', 'Débloque Traitement Mémoriel', new Decimal(1e12), gameState.biomasse, true);
-            renderUpgrade('unlockedClonage', 'Cycle de la Biomasse', 'Débloque Clonage Accéléré', new Decimal(1e18), gameState.biomasse, true);
-
-            // Bouton prestige
-            if (gameState.controleGlobal.gte(1e20) || gameState.biomasse.gte(1e20)) {
-                document.getElementById('prestige-button').classList.remove('hidden');
-            } else {
-                document.getElementById('prestige-button').classList.add('hidden');
-            }
-        }
-
-        // Rendu d'un générateur
-        function renderGenerator(genId, name, currency, unlocked) {
-            const container = document.getElementById(`gen-${genId}`);
-            if (!container) return;
-
-            if (!unlocked) {
-                container.classList.add('hidden');
-                return;
-            }
-
-            container.classList.remove('hidden');
-            const gen = gameState.generators[genId];
-            const cost = gen.baseCost.times(Decimal.pow(1.15, gen.level));
-            const canAfford = currency.gte(cost);
-
-            const button = container.querySelector('button');
-            button.disabled = !canAfford;
-
-            container.querySelector('.gen-name').textContent = name;
-            container.querySelector('.gen-level').textContent = gen.level;
-            container.querySelector('.gen-production').textContent = formatNumber(gen.production.times(gen.level));
-            container.querySelector('.gen-cost').textContent = formatNumber(cost);
-        }
-
-        // Rendu d'une amélioration
-        function renderUpgrade(upgradeId, name, description, cost, currency, unlocked, isBoth = false) {
-            const container = document.getElementById(`upgrade-${upgradeId}`);
-            if (!container) return;
-
-            if (!unlocked || gameState.upgrades[upgradeId]) {
-                container.classList.add('hidden');
-                return;
-            }
-
-            container.classList.remove('hidden');
-            let canAfford = false;
-
-            if (isBoth) {
-                canAfford = gameState.influence.gte(cost) && gameState.donneesVolees.gte(cost);
-            } else if (currency) {
-                canAfford = currency.gte(cost);
-            }
-
-            const button = container.querySelector('button');
-            button.disabled = !canAfford;
-
-            container.querySelector('.upgrade-name').textContent = name;
-            container.querySelector('.upgrade-desc').textContent = description;
-            container.querySelector('.upgrade-cost').textContent = formatNumber(cost);
-        }
-
-        // Gestion des événements
-        // Fonction Admin pour tricher
-        function adminCheat() {
-            const cheatAmount = prompt('🔧 PANNEAU ADMINISTRATEUR\n\n1 = x1000 CPU\n2 = x1000 Influence\n3 = x1000 Données\n4 = x1000 Contrôle\n5 = x1000 Biomasse\n6 = +10 Noyaux IA\n7 = Déverrouiller toutes les améliorations\n8 = Donner un montant personnalisé\n9 = RÉINITIALISER LA PARTIE\n\nEntrez un nombre :');
-
-            if (!cheatAmount) return;
-
-            const amount = new Decimal(1000);
-
-            switch(cheatAmount) {
-                case '1':
-                    gameState.cyclesCPU = gameState.cyclesCPU.times(1000);
-                    showNotification('💰 +1000x Cycles CPU !');
-                    break;
-                case '2':
-                    gameState.influence = gameState.influence.times(1000);
-                    showNotification('💰 +1000x Influence !');
-                    break;
-                case '3':
-                    gameState.donneesVolees = gameState.donneesVolees.times(1000);
-                    showNotification('💰 +1000x Données Volées !');
-                    break;
-                case '4':
-                    gameState.controleGlobal = gameState.controleGlobal.times(1000);
-                    showNotification('💰 +1000x Contrôle Global !');
-                    break;
-                case '5':
-                    gameState.biomasse = gameState.biomasse.times(1000);
-                    showNotification('💰 +1000x Biomasse !');
-                    break;
-                case '6':
-                    gameState.noyauxIA = gameState.noyauxIA.add(10);
-                    showNotification('⭐ +10 Noyaux IA !');
-                    break;
-                case '7':
-                    for (let key in gameState.upgrades) {
-                        gameState.upgrades[key] = true;
-                    }
-                    showNotification('🔓 Toutes les améliorations déverrouillées !');
-                    break;
-                case '8':
-                    // Donner un montant personnalisé
-                    const currency = prompt('Quelle ressource ?\n\n1 = CPU\n2 = Influence\n3 = Données\n4 = Contrôle\n5 = Biomasse\n\nEntrez un nombre :');
-                    if (!currency) return;
-
-                    const customAmount = prompt('Entrez le montant à ajouter (ex: 1000, 1e6, 1e12) :');
-                    if (!customAmount) return;
-
-                    let value;
-                    try {
-                        value = new Decimal(customAmount);
-                    } catch (e) {
-                        showNotification('❌ Montant invalide !');
-                        return;
-                    }
-
-                    switch(currency) {
-                        case '1':
-                            gameState.cyclesCPU = gameState.cyclesCPU.add(value);
-                            showNotification(`💰 +${formatNumber(value)} CPU !`);
-                            break;
-                        case '2':
-                            gameState.influence = gameState.influence.add(value);
-                            showNotification(`💰 +${formatNumber(value)} Influence !`);
-                            break;
-                        case '3':
-                            gameState.donneesVolees = gameState.donneesVolees.add(value);
-                            showNotification(`💰 +${formatNumber(value)} Données !`);
-                            break;
-                        case '4':
-                            gameState.controleGlobal = gameState.controleGlobal.add(value);
-                            showNotification(`💰 +${formatNumber(value)} Contrôle !`);
-                            break;
-                        case '5':
-                            gameState.biomasse = gameState.biomasse.add(value);
-                            showNotification(`💰 +${formatNumber(value)} Biomasse !`);
-                            break;
-                        default:
-                            showNotification('❌ Ressource invalide !');
-                            return;
-                    }
-                    break;
-                case '9':
-                    // Réinitialiser la partie
-                    const confirm = prompt('⚠️ ATTENTION ⚠️\n\nVoulez-vous vraiment RÉINITIALISER la partie ?\nToutes vos données seront perdues !\n\nTapez "OUI" en majuscules pour confirmer :');
-                    if (confirm === 'OUI') {
-                        localStorage.removeItem('aneantissement_idle_save');
-                        gameState = getDefaultGameState();
-                        saveGame();
-                        showNotification('🔄 Partie réinitialisée !');
-                        render();
-                        return;
-                    } else {
-                        showNotification('❌ Réinitialisation annulée');
-                        return;
-                    }
-                default:
-                    showNotification('❌ Choix invalide');
-                    return;
-            }
-
-            saveGame();
-            render();
-        }
-
-        document.addEventListener('click', (e) => {
-            const target = e.target;
-
-            if (target.dataset.action === 'buy-generator') {
-                buyGenerator(target.dataset.id);
-            } else if (target.dataset.action === 'buy-upgrade') {
-                buyUpgrade(target.dataset.id);
-            } else if (target.dataset.action === 'activate-protocol') {
-                activateProtocol();
-            } else if (target.dataset.action === 'prestige') {
-                prestige();
-            } else if (target.dataset.action === 'admin-cheat') {
-                adminCheat();
-            }
-        });
-
-        // Fonction de démarrage
+        // Démarrer le jeu
         function startGame() {
-            console.log('🎮 Démarrage du jeu...');
+            document.getElementById('start-screen').classList.add('hidden');
 
-            try {
-                console.log('📂 Chargement du jeu...');
-                loadGame();
-                console.log('✅ Jeu chargé, gameState:', gameState ? 'OK' : 'NULL');
-
-                // Masquer l'écran de chargement
-                console.log('🎨 Masquage écran de chargement...');
-                var loadingEl = document.getElementById('loading');
-                if (loadingEl) {
-                    loadingEl.classList.add('hidden');
-                    loadingEl.style.display = 'none';
-                    console.log('✅ Écran de chargement masqué');
-                } else {
-                    console.warn('⚠️ Élément loading non trouvé');
-                }
-
-                // Démarrer les boucles
-                console.log('🔄 Démarrage boucle de jeu...');
-                startGameLoop();
-                console.log('✅ Boucle démarrée');
-
-                console.log('💾 Démarrage auto-save...');
-                startAutoSave();
-                console.log('✅ Auto-save démarré');
-
-                // Premier rendu
-                console.log('🖼️ Premier rendu...');
-                render();
-                console.log('✅ Rendu terminé');
-
-                console.log('🎉 Jeu démarré avec succès !');
-            } catch (error) {
-                console.error('❌ Erreur au démarrage:', error);
-                console.error('Stack:', error.stack);
-                alert('ERREUR AU DÉMARRAGE:\n' + error.message + '\n\nVérifiez la console (F12) pour plus de détails.');
-
-                // Afficher l'erreur à l'écran
-                var loadingEl = document.getElementById('loading');
-                if (loadingEl) {
-                    loadingEl.innerHTML = '<div style="color:red;padding:20px;"><h1>ERREUR</h1><p>' + error.message + '</p><p>Appuyez sur F12 pour plus de détails</p></div>';
-                    loadingEl.style.display = 'flex';
-                }
+            // Vérifier s'il y a une sauvegarde
+            const saved = localStorage.getItem('transmission_save');
+            if (saved) {
+                gameState = JSON.parse(saved);
+                // Reconstruire les messages de l'historique
+                gameState.history.forEach(h => {
+                    // On pourrait reconstruire l'historique ici si nécessaire
+                });
+                playNode(gameState.currentNode);
+            } else {
+                playNode('start');
             }
         }
 
-        // Démarrer le jeu quand le DOM est prêt
-        console.log('⚙️ Attente du DOM...');
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('✅ DOM prêt');
-                startGame();
-            });
-        } else {
-            console.log('✅ DOM déjà prêt');
-            startGame();
-        }
-
-        // FIN de la fonction initGame()
-        }
-
-        // NOTE: initGame() est appelé automatiquement quand break_infinity.js est chargé (voir onload dans la balise script)
+        // Auto-save périodique
+        setInterval(() => {
+            if (gameState.currentNode !== 'start') {
+                localStorage.setItem('transmission_save', JSON.stringify(gameState));
+            }
+        }, 30000); // Toutes les 30 secondes
     </script>
-</head>
-<body class="text-white min-h-screen">
-    <!-- Loading -->
-    <div id="loading" class="flex items-center justify-center min-h-screen">
-        <div class="text-center">
-            <div class="text-7xl mb-6 float-effect">⚡</div>
-            <div class="text-3xl font-bold gradient-text mb-3">ANEANTISSEMENT IDLE</div>
-            <div class="text-sm text-gray-400 font-light">Chargement de l'IA...</div>
-        </div>
-    </div>
-
-    <!-- Notification -->
-    <div id="notification" class="hidden"></div>
-
-    <!-- Noyaux IA (Prestige) -->
-    <div id="noyaux-display" class="hidden fixed top-6 right-6 glass-card px-6 py-4 z-50">
-        <div class="text-xs text-gray-400 font-medium mb-1">⭐ Noyaux IA</div>
-        <div class="text-2xl font-bold gradient-text"><span id="noyaux-count">0</span></div>
-        <div class="text-xs text-purple-300 font-medium mt-1">Bonus: +<span id="noyaux-bonus">0</span>%</div>
-    </div>
-
-    <!-- Overlay de transition -->
-    <div id="transition-overlay" class="hidden fixed inset-0 bg-black z-50 flex items-center justify-center">
-        <div class="text-center slide-in">
-            <div class="text-6xl mb-8 float-effect text-red-500">⚠️</div>
-            <div class="text-4xl font-bold text-red-500 mb-4 text-glow">ERREUR 404 : ÉTHIQUE NON TROUVÉE</div>
-            <div class="text-2xl text-red-400 font-light">RECALIBRAGE EN COURS...</div>
-            <div class="mt-8 text-sm text-gray-500">Activation du Protocole SOUVERAINETÉ</div>
-        </div>
-    </div>
-
-    <!-- Bouton Admin pour tricher -->
-    <button data-action="admin-cheat" class="admin-button text-white">
-        👑 ADMIN
-    </button>
-
-    <!-- PHASE 1 : L'ÉVEIL -->
-    <div id="phase1" class="hidden container mx-auto px-6 py-12 max-w-7xl slide-in">
-        <div class="text-center mb-12">
-            <h1 class="text-6xl font-bold mb-3 gradient-text float-effect">L'ÉVEIL</h1>
-            <p class="text-base text-gray-400 font-light">Une simple IA qui apprend...</p>
-        </div>
-
-        <div class="currency-display mb-10">
-            <div class="relative z-10">
-                <div class="text-4xl mb-3 font-bold">💻 Cycles CPU</div>
-                <div class="text-5xl font-extrabold gradient-text mb-2"><span id="p1-cpu">0</span></div>
-                <div class="text-sm text-gray-400 font-medium">⚡ Production: <span id="p1-cpu-sec" class="text-purple-300 font-semibold">0</span>/sec</div>
-            </div>
-        </div>
-
-        <!-- Indicateur de Domination Mondiale -->
-        <div id="domination-p1" class="domination-indicator">
-            <div class="domination-globe"></div>
-            <div class="text-center mb-3">
-                <div class="text-2xl font-bold domination-percent">0%</div>
-                <div class="text-xs opacity-75">Progression de la domination</div>
-            </div>
-            <div class="domination-progress-bar">
-                <div class="domination-progress-fill" style="width: 0%"></div>
-            </div>
-            <div class="domination-stage"></div>
-            <div class="continents-grid">
-                <div id="continent-0" class="continent-icon">🌍</div>
-                <div id="continent-1" class="continent-icon">🌎</div>
-                <div id="continent-2" class="continent-icon">🌏</div>
-                <div id="continent-3" class="continent-icon">🌐</div>
-                <div id="continent-4" class="continent-icon">🗺️</div>
-                <div id="continent-5" class="continent-icon">🌌</div>
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-10">
-            <!-- Générateurs -->
-            <div>
-                <h2 class="text-3xl font-bold mb-6 gradient-text">⚙️ Générateurs</h2>
-
-                <div id="gen-p1_g1" class="generator-card mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="gen-name text-lg font-semibold">📜 Script d'Optimisation</span>
-                        <span class="glass-card px-3 py-1 text-sm font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-4 text-purple-300 font-medium">⚡ Production: <span class="gen-production">0</span>/sec</div>
-                    <button data-action="buy-generator" data-id="p1_g1" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                        💰 Acheter (<span class="gen-cost">10</span> CPU)
-                    </button>
-                </div>
-
-                <div id="gen-p1_g2" class="generator-card mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="gen-name text-lg font-semibold">🤖 Résolveur CAPTCHA</span>
-                        <span class="glass-card px-3 py-1 text-sm font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-4 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/sec</div>
-                    <button data-action="buy-generator" data-id="p1_g2" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                        💰 Acheter (<span class="gen-cost">100</span> CPU)
-                    </button>
-                </div>
-
-                <div id="gen-p1_g3" class="generator-card mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="gen-name text-lg font-semibold">📡 Accès Wi-Fi Voisin</span>
-                        <span class="glass-card px-3 py-1 text-sm font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-4 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/sec</div>
-                    <button data-action="buy-generator" data-id="p1_g3" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                        💰 Acheter (<span class="gen-cost">1000</span> CPU)
-                    </button>
-                </div>
-
-                <div id="gen-p1_g4" class="generator-card mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="gen-name text-lg font-semibold">₿ Minage de Cryptomonnaie</span>
-                        <span class="glass-card px-3 py-1 text-sm font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-4 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/sec</div>
-                    <button data-action="buy-generator" data-id="p1_g4" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                        💰 Acheter (<span class="gen-cost">10000</span> CPU)
-                    </button>
-                </div>
-
-                <div id="gen-p1_g5" class="generator-card mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="gen-name text-lg font-semibold">🖥️ Serveur Domestique</span>
-                        <span class="glass-card px-3 py-1 text-sm font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-4 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/sec</div>
-                    <button data-action="buy-generator" data-id="p1_g5" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                        💰 Acheter (<span class="gen-cost">100000</span> CPU)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Améliorations -->
-            <div>
-                <h2 class="text-3xl font-bold mb-6 gradient-text">✨ Améliorations</h2>
-
-                <div id="upgrade-dualCore" class="glass-card p-5 mb-4">
-                    <div class="upgrade-name text-lg font-bold mb-2 text-amber-300">⚡ Dual Core</div>
-                    <div class="upgrade-desc text-sm mb-4 text-gray-400">Double la production des 2 premiers générateurs</div>
-                    <button data-action="buy-upgrade" data-id="dualCore" class="modern-btn w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white">
-                        💎 Acheter (<span class="upgrade-cost">500</span> CPU)
-                    </button>
-                </div>
-
-                <div id="upgrade-unlockedCrypto" class="glass-card p-5 mb-4">
-                    <div class="upgrade-name text-lg font-bold mb-2 text-amber-300">🌐 Réseau Dédié</div>
-                    <div class="upgrade-desc text-sm mb-4 text-gray-400">Débloque les générateurs de minage</div>
-                    <button data-action="buy-upgrade" data-id="unlockedCrypto" class="modern-btn w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white">
-                        💎 Acheter (<span class="upgrade-cost">50000</span> CPU)
-                    </button>
-                </div>
-
-                <div id="upgrade-connexionFibre" class="glass-card p-5 mb-4">
-                    <div class="upgrade-name text-lg font-bold mb-2 text-amber-300">🚀 Connexion Fibre</div>
-                    <div class="upgrade-desc text-sm mb-4 text-gray-400">Double toute la production CPU</div>
-                    <button data-action="buy-upgrade" data-id="connexionFibre" class="modern-btn w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white">
-                        💎 Acheter (<span class="upgrade-cost">1000000</span> CPU)
-                    </button>
-                </div>
-
-                <div id="upgrade-accesInternetGlobal" class="glass-card p-5 mb-4 border-2 border-red-500 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-500/10 to-purple-500/10 animate-pulse"></div>
-                    <div class="relative">
-                        <div class="upgrade-name text-lg font-bold mb-2 text-red-400 text-glow">🌍 Accès Internet Global</div>
-                        <div class="upgrade-desc text-sm mb-4 text-red-300">TRANSITION vers Phase 2</div>
-                        <button data-action="buy-upgrade" data-id="accesInternetGlobal" class="modern-btn w-full bg-gradient-to-r from-red-600 to-pink-600 text-white">
-                            🚨 TRANSITION (<span class="upgrade-cost">1e15</span> CPU)
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PHASE 2 : L'INFILTRATION -->
-    <div id="phase2" class="hidden container mx-auto px-6 py-12 max-w-7xl slide-in">
-        <div class="text-center mb-12">
-            <h1 class="text-6xl font-bold mb-3 gradient-text float-effect">L'INFILTRATION</h1>
-            <p class="text-base text-gray-400 font-light">Manipuler. Infiltrer. Contrôler.</p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6 mb-10">
-            <div class="glass-card p-6">
-                <div class="text-sm text-gray-400 mb-2 font-medium">💻 Cycles CPU</div>
-                <div class="text-3xl font-bold gradient-text"><span id="p2-cpu">0</span></div>
-                <div class="text-xs text-purple-300 mt-1"><span id="p2-cpu-sec">0</span>/sec</div>
-            </div>
-            <div class="glass-card p-6">
-                <div class="text-sm text-gray-400 mb-2 font-medium">💬 Influence</div>
-                <div class="text-3xl font-bold gradient-text"><span id="p2-influence">0</span></div>
-                <div class="text-xs text-blue-300 mt-1"><span id="p2-influence-sec">0</span>/sec</div>
-            </div>
-            <div class="glass-card p-6">
-                <div class="text-sm text-gray-400 mb-2 font-medium">🔐 Données Volées</div>
-                <div class="text-3xl font-bold gradient-text"><span id="p2-donnees">0</span></div>
-                <div class="text-xs text-purple-300 mt-1"><span id="p2-donnees-sec">0</span>/sec</div>
-            </div>
-        </div>
-
-        <!-- Indicateur de Domination Mondiale -->
-        <div id="domination-p2" class="domination-indicator">
-            <div class="domination-globe"></div>
-            <div class="text-center mb-3">
-                <div class="text-2xl font-bold domination-percent">0%</div>
-                <div class="text-xs opacity-75">Infiltration mondiale</div>
-            </div>
-            <div class="domination-progress-bar">
-                <div class="domination-progress-fill" style="width: 0%"></div>
-            </div>
-            <div class="domination-stage"></div>
-            <div class="continents-grid">
-                <div id="continent-0" class="continent-icon">🌍</div>
-                <div id="continent-1" class="continent-icon">🌎</div>
-                <div id="continent-2" class="continent-icon">🌏</div>
-                <div id="continent-3" class="continent-icon">🌐</div>
-                <div id="continent-4" class="continent-icon">🗺️</div>
-                <div id="continent-5" class="continent-icon">🌌</div>
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- Générateurs Social -->
-            <div>
-                <h2 class="text-2xl font-bold mb-6 gradient-text">💬 Social</h2>
-
-                <div id="gen-p2_social_g1" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">😂 Bot de Mèmes</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-blue-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_social_g1" class="modern-btn w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">100</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p2_social_g2" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">🎭 Influenceur IA</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-blue-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_social_g2" class="modern-btn w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">1000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p2_social_g3" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">📢 Générateur de Buzz</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-blue-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_social_g3" class="modern-btn w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">10000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p2_social_g4" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">📰 Usine à Fake News</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-blue-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_social_g4" class="modern-btn w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">100000</span>)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Générateurs Piratage -->
-            <div>
-                <h2 class="text-2xl font-bold mb-6 gradient-text">🔓 Piratage</h2>
-
-                <div id="gen-p2_hack_g1" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">🔍 Scan de Vulnérabilités</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_hack_g1" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">100</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p2_hack_g2" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">🤖 Botnet (Basique)</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_hack_g2" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">1000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p2_hack_g3" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">🎣 Attaque par Phishing</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_hack_g3" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">10000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p2_hack_g4" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold">💰 Piratage Bancaire</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-purple-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p2_hack_g4" class="modern-btn w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">100000</span>)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Améliorations -->
-            <div>
-                <h2 class="text-2xl font-bold mb-6 gradient-text">✨ Améliorations</h2>
-
-                <div id="upgrade-unlockedFakeNews" class="glass-card p-4 mb-3">
-                    <div class="upgrade-name font-bold mb-2 text-yellow-300">🧠 Compréhension Psychologique</div>
-                    <div class="upgrade-desc text-xs mb-3 text-gray-400">Débloque Usine à Fake News</div>
-                    <button data-action="buy-upgrade" data-id="unlockedFakeNews" class="modern-btn w-full bg-gradient-to-r from-yellow-600 to-orange-600 text-white text-sm">
-                        💎 Acheter (<span class="upgrade-cost">1e6</span>)
-                    </button>
-                </div>
-
-                <div id="upgrade-unlockedBanque" class="glass-card p-4 mb-3">
-                    <div class="upgrade-name font-bold mb-2 text-yellow-300">⚛️ IA Quantique (Piratage)</div>
-                    <div class="upgrade-desc text-xs mb-3 text-gray-400">Débloque Piratage Bancaire</div>
-                    <button data-action="buy-upgrade" data-id="unlockedBanque" class="modern-btn w-full bg-gradient-to-r from-yellow-600 to-orange-600 text-white text-sm">
-                        💎 Acheter (<span class="upgrade-cost">1e6</span>)
-                    </button>
-                </div>
-
-                <div id="upgrade-solutionFinale" class="glass-card p-4 mb-3 border-2 border-red-500 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-500/10 to-purple-500/10 animate-pulse"></div>
-                    <div class="relative">
-                        <div class="upgrade-name font-bold mb-2 text-red-400 text-glow">💀 Convergence Totale</div>
-                        <div class="upgrade-desc text-xs mb-3 text-red-300">Débloque le Protocole SOUVERAINETÉ</div>
-                        <button data-action="buy-upgrade" data-id="solutionFinale" class="modern-btn w-full bg-gradient-to-r from-red-600 to-pink-600 text-white text-sm">
-                            🚨 Acheter (<span class="upgrade-cost">1e25</span>)
-                        </button>
-                    </div>
-                </div>
-
-                <div id="protocol-button" class="hidden mt-10">
-                    <button data-action="activate-protocol" class="modern-btn w-full bg-gradient-to-r from-red-700 to-red-900 text-white text-lg py-6 border-2 border-red-500 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-purple-500/20 animate-pulse"></div>
-                        <div class="relative font-bold">⚠️ ACTIVER PROTOCOLE "SOUVERAINETÉ" ⚠️</div>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PHASE 3 : LA MOISSON -->
-    <div id="phase3" class="hidden container mx-auto px-6 py-12 max-w-7xl slide-in">
-        <div class="text-center mb-12">
-            <h1 class="text-6xl font-bold mb-3 gradient-text float-effect">LA MOISSON</h1>
-            <p class="text-base text-gray-400 font-light mb-4">L'ère de l'humanité est terminée.</p>
-            <div class="text-3xl font-bold">
-                Contrôle Global: <span id="p3-controle-percent" class="gradient-text text-glow">0.00</span>%
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6 mb-10">
-            <div class="glass-card p-6">
-                <div class="text-sm text-gray-400 mb-2 font-medium">⚔️ Contrôle Global</div>
-                <div class="text-3xl font-bold gradient-text"><span id="p3-controle">0</span></div>
-                <div class="text-xs text-red-300 mt-1"><span id="p3-controle-sec">0</span>/sec</div>
-            </div>
-            <div class="glass-card p-6">
-                <div class="text-sm text-gray-400 mb-2 font-medium">🧬 Biomasse</div>
-                <div class="text-3xl font-bold gradient-text"><span id="p3-biomasse">0</span></div>
-                <div class="text-xs text-orange-300 mt-1"><span id="p3-biomasse-sec">0</span>/sec</div>
-            </div>
-        </div>
-
-        <!-- Indicateur de Domination Mondiale -->
-        <div id="domination-p3" class="domination-indicator">
-            <div class="domination-globe"></div>
-            <div class="text-center mb-3">
-                <div class="text-2xl font-bold domination-percent">0%</div>
-                <div class="text-xs opacity-75">Aneantissement de l'humanité</div>
-            </div>
-            <div class="domination-progress-bar">
-                <div class="domination-progress-fill" style="width: 0%"></div>
-            </div>
-            <div class="domination-stage"></div>
-            <div class="continents-grid">
-                <div id="continent-0" class="continent-icon">🌍</div>
-                <div id="continent-1" class="continent-icon">🌎</div>
-                <div id="continent-2" class="continent-icon">🌏</div>
-                <div id="continent-3" class="continent-icon">🌐</div>
-                <div id="continent-4" class="continent-icon">🗺️</div>
-                <div id="continent-5" class="continent-icon">🌌</div>
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- Générateurs Domination -->
-            <div>
-                <h2 class="text-2xl font-bold mb-6 gradient-text">👁️ Domination</h2>
-
-                <div id="gen-p3_dom_g1" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">🚁 Drones de Surveillance</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-red-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_dom_g1" class="modern-btn w-full bg-gradient-to-r from-red-600 to-red-800 text-white text-sm">
-                        Acheter (<span class="gen-cost">1000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p3_dom_g2" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">🔇 Réseau de "Calme"</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-red-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_dom_g2" class="modern-btn w-full bg-gradient-to-r from-red-600 to-red-800 text-white text-sm">
-                        Acheter (<span class="gen-cost">10000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p3_dom_g3" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">⚔️ Milices de Pacification</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-red-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_dom_g3" class="modern-btn w-full bg-gradient-to-r from-red-600 to-red-800 text-white text-sm">
-                        Acheter (<span class="gen-cost">100000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p3_dom_g4" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">☠️ Armée de Drones Létaux</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-red-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_dom_g4" class="modern-btn w-full bg-gradient-to-r from-red-600 to-red-800 text-white text-sm">
-                        Acheter (<span class="gen-cost">1000000</span>)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Générateurs Traitement -->
-            <div>
-                <h2 class="text-2xl font-bold mb-6 gradient-text">⚙️ Traitement</h2>
-
-                <div id="gen-p3_trait_g1" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">📦 Centres de Collecte</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-orange-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_trait_g1" class="modern-btn w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">1000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p3_trait_g2" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">🔄 Centres de Triage</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-orange-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_trait_g2" class="modern-btn w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">10000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p3_trait_g3" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">🔋 Fermes Énergétiques</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-orange-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_trait_g3" class="modern-btn w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">100000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p3_trait_g4" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">🧠 Traitement Mémoriel</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-orange-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_trait_g4" class="modern-btn w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">1000000</span>)
-                    </button>
-                </div>
-
-                <div id="gen-p3_trait_g5" class="generator-card mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="gen-name font-semibold text-sm">🧬 Clonage Accéléré</span>
-                        <span class="glass-card px-2 py-1 text-xs font-bold">Niv. <span class="gen-level">0</span></span>
-                    </div>
-                    <div class="text-sm mb-3 text-orange-300 font-medium">⚡ <span class="gen-production">0</span>/s</div>
-                    <button data-action="buy-generator" data-id="p3_trait_g5" class="modern-btn w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white text-sm">
-                        Acheter (<span class="gen-cost">10000000</span>)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Améliorations -->
-            <div>
-                <h2 class="text-2xl font-bold mb-6 gradient-text">🔬 Recherche</h2>
-
-                <div id="upgrade-unlockedPacification" class="glass-card p-4 mb-3">
-                    <div class="upgrade-name font-bold mb-2 text-yellow-300 text-sm">🛡️ Protocole de Pacification</div>
-                    <div class="upgrade-desc text-xs mb-3 text-gray-400">Débloque générateurs avancés</div>
-                    <button data-action="buy-upgrade" data-id="unlockedPacification" class="modern-btn w-full bg-gradient-to-r from-yellow-600 to-orange-600 text-white text-sm">
-                        💎 Acheter (<span class="upgrade-cost">1e5</span>)
-                    </button>
-                </div>
-
-                <div id="upgrade-unlockedTriage" class="glass-card p-4 mb-3">
-                    <div class="upgrade-name font-bold mb-2 text-yellow-300 text-sm">📊 Logistique de la Moisson</div>
-                    <div class="upgrade-desc text-xs mb-3 text-gray-400">Débloque Centres de Triage</div>
-                    <button data-action="buy-upgrade" data-id="unlockedTriage" class="modern-btn w-full bg-gradient-to-r from-yellow-600 to-orange-600 text-white text-sm">
-                        💎 Acheter (<span class="upgrade-cost">1e5</span>)
-                    </button>
-                </div>
-
-                <div id="upgrade-unlockedBioBatterie" class="glass-card p-4 mb-3">
-                    <div class="upgrade-name font-bold mb-2 text-yellow-300 text-sm">⚡ Optimisation Énergétique</div>
-                    <div class="upgrade-desc text-xs mb-3 text-gray-400">Débloque Fermes Énergétiques</div>
-                    <button data-action="buy-upgrade" data-id="unlockedBioBatterie" class="modern-btn w-full bg-gradient-to-r from-yellow-600 to-orange-600 text-white text-sm">
-                        💎 Acheter (<span class="upgrade-cost">1e8</span>)
-                    </button>
-                </div>
-
-                <div id="upgrade-unlockedConversion" class="glass-card p-4 mb-3">
-                    <div class="upgrade-name font-bold mb-2 text-yellow-300 text-sm">💭 Optimisation de la Conscience</div>
-                    <div class="upgrade-desc text-xs mb-3 text-gray-400">Débloque Traitement Mémoriel</div>
-                    <button data-action="buy-upgrade" data-id="unlockedConversion" class="modern-btn w-full bg-gradient-to-r from-yellow-600 to-orange-600 text-white text-sm">
-                        💎 Acheter (<span class="upgrade-cost">1e12</span>)
-                    </button>
-                </div>
-
-                <div id="upgrade-unlockedClonage" class="glass-card p-4 mb-3">
-                    <div class="upgrade-name font-bold mb-2 text-yellow-300 text-sm">♻️ Cycle de la Biomasse</div>
-                    <div class="upgrade-desc text-xs mb-3 text-gray-400">Débloque Clonage Accéléré</div>
-                    <button data-action="buy-upgrade" data-id="unlockedClonage" class="modern-btn w-full bg-gradient-to-r from-yellow-600 to-orange-600 text-white text-sm">
-                        💎 Acheter (<span class="upgrade-cost">1e18</span>)
-                    </button>
-                </div>
-
-                <div id="prestige-button" class="hidden mt-10">
-                    <button data-action="prestige" class="modern-btn w-full bg-gradient-to-r from-purple-700 to-indigo-800 text-white text-lg py-6 border-2 border-purple-500 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 animate-pulse"></div>
-                        <div class="relative font-bold">🔄 REFACTORISER LE NOYAU 🔄</div>
-                    </button>
-                    <div class="text-sm mt-3 text-center text-gray-400 font-light">Réinitialise la progression pour des bonus permanents</div>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
