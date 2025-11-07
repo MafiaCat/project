@@ -359,15 +359,7 @@
             <button id="menu-button" onclick="openMenu()">☰</button>
         </div>
 
-        <div id="messages">
-            <div class="message received" id="typing-message" style="display: none;">
-                <div class="typing-indicator" id="typing">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            </div>
-        </div>
+        <div id="messages"></div>
 
         <div id="choices"></div>
     </div>
@@ -415,17 +407,37 @@
         }
 
         function showTyping() {
-            const typingMsg = document.getElementById('typing-message');
-            typingMsg.style.display = 'flex';
-            document.getElementById('typing').classList.add('active');
+            // Retirer l'ancien typing indicator s'il existe
+            hideTyping();
+
             const messagesDiv = document.getElementById('messages');
+
+            // Créer le typing indicator
+            const typingMessage = document.createElement('div');
+            typingMessage.className = 'message received';
+            typingMessage.id = 'typing-message';
+
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator active';
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                typingIndicator.appendChild(dot);
+            }
+
+            typingMessage.appendChild(typingIndicator);
+            messagesDiv.appendChild(typingMessage);
+
+            // Auto-scroll
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         function hideTyping() {
             const typingMsg = document.getElementById('typing-message');
-            typingMsg.style.display = 'none';
-            document.getElementById('typing').classList.remove('active');
+            if (typingMsg) {
+                typingMsg.remove();
+            }
         }
 
         function showChoices(choices) {
